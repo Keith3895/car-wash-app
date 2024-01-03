@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "809668854772",
+    "project_id": "car-wash-3a629",
+    "storage_bucket": "car-wash-3a629.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:809668854772:android:880f768b6e78362b50afa1",
+        "android_client_info": {
+          "package_name": "com.example.car_wash"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "809668854772-pecnr3o5v4v9mjs2v7svil3bagaj880f.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.car_wash",
+            "certificate_hash": "752830e37f0ddfa1cff4910d479fc3def48eed8e"
+          }
+        },
+        {
+          "client_id": "809668854772-4subgvumos805dne5c05vt40tgdurcmg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBQfMAWkQARFBdEk42pX_K_JKDA2qn_EzA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "809668854772-4subgvumos805dne5c05vt40tgdurcmg.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "809668854772-nvn3cb52u80imsenboo5iuc792kbdi3a.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.carWash.RunnerTests"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

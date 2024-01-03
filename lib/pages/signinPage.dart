@@ -1,7 +1,10 @@
 import 'package:car_wash/services/FieldValidators.dart';
+import 'package:car_wash/widgets/inputField.dart';
+import 'package:car_wash/widgets/loginBackdrop.dart';
 import 'package:car_wash/widgets/passwordField.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class SignIn extends StatefulWidget {
   @override
@@ -10,10 +13,23 @@ class SignIn extends StatefulWidget {
   }
 }
 
+GoogleSignIn _googleSignIn = GoogleSignIn(
+  serverClientId: "809668854772-4subgvumos805dne5c05vt40tgdurcmg.apps.googleusercontent.com",
+);
+
 class LoginState extends State<SignIn> {
   var _formKey = GlobalKey<FormState>();
   String _username = '';
   String _password = '';
+  GoogleSignInAccount? _currentUser;
+  bool _isAuthorized = false; // has granted permissions?
+  String _contactText = '';
+
+  @override
+  void initState() {
+    _googleSignIn.currentUser?.clearAuthCache();
+  }
+
   Widget build(BuildContext context) {
     return Container(
       alignment: Alignment.bottomCenter,
@@ -21,65 +37,43 @@ class LoginState extends State<SignIn> {
           image: DecorationImage(image: AssetImage("assets/Splash Screen.png"), fit: BoxFit.fill)),
       child: Container(
           child: SingleChildScrollView(
-        child: LoginBackdrop(context),
+        child: _loginBackdrop(context),
       )),
     );
   }
 
-  Widget LoginBackdrop(BuildContext context) {
-    return Container(
-      height: 600,
-      padding: const EdgeInsets.all(20),
-      decoration: const BoxDecoration(
-          color: Color(0xE7F6F5F5), borderRadius: BorderRadius.all(Radius.circular(20))),
-      child: Column(
-          // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image(image: AssetImage("assets/Icon.png")),
-              ],
+  Widget _loginBackdrop(BuildContext context) {
+    return LoginBackdrop(children: [
+      _formSection(),
+      SizedBox(height: 10),
+      SizedBox(
+        width: 350,
+        height: 55,
+        child: ElevatedButton(
+          style: const ButtonStyle(
+            shape: MaterialStatePropertyAll(
+                RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(8)))),
+            backgroundColor: MaterialStatePropertyAll(
+              Color(0xE70BCE83),
             ),
-            const Text(
-              "Car Wash App",
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 34, fontWeight: FontWeight.bold, color: Color(0xE72D0C57)),
-            ),
-            _formSection(),
-            SizedBox(height: 10),
-            SizedBox(
-              width: 350,
-              height: 55,
-              child: ElevatedButton(
-                style: const ButtonStyle(
-                  shape: MaterialStatePropertyAll(
-                      RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(8)))),
-                  backgroundColor: MaterialStatePropertyAll(
-                    Color(0xE70BCE83),
-                  ),
-                ),
-                child: const Text("Sign In",
-                    style:
-                        TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: Colors.white)),
-                onPressed: () {
-                  _submit();
-                },
-              ),
-            ),
-            SizedBox(height: 10),
-            TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: const Text(
-                  "Cancel",
-                  style: TextStyle(
-                      color: Color(0xE72D0C57), fontWeight: FontWeight.w700, fontSize: 15),
-                )),
-          ]),
-    );
+          ),
+          child: const Text("Sign In",
+              style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: Colors.white)),
+          onPressed: () {
+            _submit();
+          },
+        ),
+      ),
+      SizedBox(height: 10),
+      TextButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: const Text(
+            "Cancel",
+            style: TextStyle(color: Color(0xE72D0C57), fontWeight: FontWeight.w700, fontSize: 15),
+          )),
+    ]);
   }
 
   Widget _formSection() {
@@ -136,37 +130,15 @@ class LoginState extends State<SignIn> {
   }
 
   Widget _emailField() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          padding: EdgeInsets.symmetric(horizontal: 14),
-          child: const Text(
-            "Email Address",
-            textAlign: TextAlign.left,
-            style: TextStyle(fontSize: 12, color: Color(0xe79586a8)),
-          ),
-        ),
-        TextFormField(
-          key: const Key('email'),
-          decoration: const InputDecoration(
-              labelText: "Email Address",
-              floatingLabelBehavior: FloatingLabelBehavior.never,
-              labelStyle: TextStyle(height: .8, color: Color(0xe72D0C57), fontSize: 15),
-              border: OutlineInputBorder(),
-              enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xe7D9D0E3))),
-              fillColor: Colors.white,
-              filled: true,
-              contentPadding: EdgeInsets.all(13)),
-          validator: (value) => FieldValidators.validateEmail(value.toString()),
-          onSaved: (value) {
-            setState(() {
-              _username = value.toString();
-            });
-          },
-        ),
-      ],
+    return InputField(
+      fieldKey: const Key('email'),
+      labelText: "Email Address",
+      validator: (value) => FieldValidators.validateEmail(value.toString()),
+      onSaved: (value) {
+        setState(() {
+          _username = value.toString();
+        });
+      },
     );
   }
 
@@ -182,11 +154,22 @@ class LoginState extends State<SignIn> {
         });
   }
 
-  void _externalLogin(provider) async {
-    // var loginResp = await AuthController.authenticate(provider);
-    // if (loginResp['statusCode'] >= 200 && loginResp['statusCode'] <= 210) {
-    Navigator.pushNamed(context, '/home/');
-    // }
+  Future<void> _externalLogin(String provider) async {
+    if (provider == 'gcp') {
+      var userData = await _googleSignIn.signIn(); //.then((userData) {
+      var googleKey = await userData?.authentication; //.then((googleKey) {
+      print(googleKey?.accessToken);
+      print(googleKey?.idToken);
+      print(_googleSignIn.currentUser?.displayName);
+      // }).catchError((err) {
+      //   print('inner error');
+      // });
+      // print(userData);
+      // }).catchError((e) {
+      //   print("error");
+      //   print(e);
+      // });
+    }
   }
 
   void _submit() async {

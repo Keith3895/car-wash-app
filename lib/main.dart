@@ -2,8 +2,15 @@ import 'package:car_wash/routes/base.dart';
 import 'package:car_wash/routes/signin.dart';
 import 'package:flutter/material.dart';
 import 'routes/landing.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
   runApp(MaterialApp(
     title: 'Flutter Navigation',
     theme: ThemeData(
