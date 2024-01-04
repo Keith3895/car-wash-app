@@ -12,7 +12,6 @@ class AuthService extends ChangeNotifier {
 
   String get accessToken => _accessToken?.isNotEmpty ?? true ? '$_accessToken' : '';
   set accessToken(String token) {
-    print(token);
     assert(token.isNotEmpty, 'Access token cannot be empty');
     _accessToken = token;
     storageBox.put('access_token', token);

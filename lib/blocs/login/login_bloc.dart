@@ -35,7 +35,6 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     } else {
       data = await authRepo.signInWithGoogle();
     }
-    print(data);
     if (data is UserDetails) {
       // await authService.updateCurrentUser(data.$1!);
       emit(const LoginSuccess(message: "Login Successful"));

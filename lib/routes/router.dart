@@ -22,8 +22,6 @@ class AppRouter {
       default:
         return MaterialPageRoute(
           builder: (context) {
-            print("------------------");
-            print(AuthService.instance.isLoggedIn);
             return AuthService.instance.isLoggedIn ? const BasePath() : const LandingRoute();
           },
         );

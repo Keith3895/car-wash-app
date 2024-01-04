@@ -53,9 +53,12 @@ class AuthRepo {
           "https://www.googleapis.com/auth/userinfo.email",
           "https://www.googleapis.com/auth/userinfo.profile",
           "openid"
-        ]);
-    var userData = await _googleSignIn.signIn(); //.then((userData) {
-    var googleKey = await userData?.authentication; //.then((googleKey) {
+        ],
+        forceCodeForRefreshToken: true);
+    var userData = await _googleSignIn.signIn();
+    await _googleSignIn.currentUser?.clearAuthCache();
+    // userData = await _googleSignIn.signInSilently(reAuthenticate: true);
+    var googleKey = await userData?.authentication;
     return _signinToBackendWithGoogle(
         token: googleKey?.idToken, access_token: googleKey?.accessToken);
   }
@@ -65,16 +68,13 @@ class AuthRepo {
     final url = Uri.parse("http://10.0.2.2:8000/api/auth/google/");
     final tokenObject = {"access_token": access_token, "id_token": token};
     try {
-      print("=====================================");
-      print(tokenObject);
       http.Response response = await client!.post(url,
           headers: {HttpHeaders.contentTypeHeader: 'application/json'},
           body: utf8.encode(json.encode(tokenObject)));
       if (response.statusCode == 200) {
         final _responseBody = jsonDecode(response.body);
-        print(_responseBody);
-        AuthService.instance.accessToken = _responseBody['access_token'];
-        AuthService.instance.refreshToken = _responseBody['refresh_token'];
+        AuthService.instance.accessToken = _responseBody['access'];
+        AuthService.instance.refreshToken = _responseBody['refresh'];
         var a = UserDetails.fromJson(_responseBody['user']);
         AuthService.instance.updateCurrentUser(a);
         return a;
@@ -88,21 +88,24 @@ class AuthRepo {
     }
   }
 
-  Future logout() async {
+  Future<(bool, String)> logout() async {
     String _accessToken = AuthService.instance.accessToken;
-    var message;
+    String message;
     final url = Uri.parse("http://10.0.2.2:8000/api/auth/logout/");
     try {
+      final _headers = {
+        HttpHeaders.contentTypeHeader: 'application/json',
+        HttpHeaders.authorizationHeader: _accessToken
+      };
       http.Response response = await client!.post(
         url,
-        headers: {
-          HttpHeaders.contentTypeHeader: 'application/json',
-          HttpHeaders.authorizationHeader: _accessToken
-        },
+        headers: _headers,
       );
       if (response.statusCode == 200) {
         final _responseBody = jsonDecode(response.body);
-        return _responseBody.details;
+        return _responseBody['detail'].isNotEmpty
+            ? (true, _responseBody['detail'] as String)
+            : (false, _responseBody['detail'] as String);
       } else {
         message = "Something went wrong on the backend.";
       }
@@ -111,5 +114,6 @@ class AuthRepo {
     } catch (e) {
       message = "Something went wrong!";
     }
+    return (false, message);
   }
 }

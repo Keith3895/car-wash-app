@@ -1,5 +1,6 @@
 import 'package:car_wash/blocs/login/login_bloc.dart';
 import 'package:car_wash/cubits/internet/internet_cubit.dart';
+import 'package:car_wash/cubits/logout/logout_cubit.dart';
 import 'package:car_wash/models/user_details.dart';
 import 'package:car_wash/repos/authRepo.dart';
 import 'package:car_wash/routes/router.dart';
@@ -54,6 +55,9 @@ class MyApp extends StatelessWidget {
                 ),
                 BlocProvider<InternetCubit>(
                     create: (context) => InternetCubit(connectivity: connectivity)),
+                BlocProvider(
+                  create: (context) => LogoutCubit(context.read<AuthRepo>()),
+                ),
               ],
               child: MaterialApp(
                 title: 'Car Wash',
