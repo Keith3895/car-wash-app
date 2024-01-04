@@ -55,6 +55,7 @@ class _InputField extends State<InputField> {
               contentPadding: const EdgeInsets.all(13)),
           validator: widget.validator,
           onSaved: widget.onSaved,
+          controller: widget.controller,
         ),
       ],
     );

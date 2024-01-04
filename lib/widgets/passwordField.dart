@@ -9,9 +9,9 @@ class PasswordField extends StatefulWidget {
   /// to [initialValue] or the empty string.
   ///
   /// For documentation about the various parameters, see the [TextField] class
-  /// and [new TextField], the constructor.
+  /// and [TextField.new], the constructor.
   const PasswordField(
-      {this.fieldKey,
+      {super.key, this.fieldKey,
       this.hintText = '',
       this.labelText = '',
       this.helperText = '',
@@ -31,7 +31,7 @@ class PasswordField extends StatefulWidget {
   final int? maxLength;
   final TextEditingController? controller;
   @override
-  _PasswordFieldState createState() => new _PasswordFieldState();
+  _PasswordFieldState createState() => _PasswordFieldState();
 }
 
 class _PasswordFieldState extends State<PasswordField> {
@@ -44,7 +44,7 @@ class _PasswordFieldState extends State<PasswordField> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            padding: EdgeInsets.symmetric(horizontal: 14),
+            padding: const EdgeInsets.symmetric(horizontal: 14),
             child: Text(
               widget.labelText,
               textAlign: TextAlign.left,
@@ -74,13 +74,13 @@ class _PasswordFieldState extends State<PasswordField> {
               hintText: widget.hintText,
               labelText: widget.labelText,
               // helperText: widget.helperText,
-              suffixIcon: new GestureDetector(
+              suffixIcon: GestureDetector(
                 onTap: () {
                   setState(() {
                     _obscureText = !_obscureText;
                   });
                 },
-                child: new Icon(_obscureText ? Icons.visibility : Icons.visibility_off),
+                child: Icon(_obscureText ? Icons.visibility : Icons.visibility_off),
               ),
             ),
           )

@@ -1,46 +1,89 @@
-import 'package:car_wash/routes/base.dart';
-import 'package:car_wash/routes/signin.dart';
+import 'package:car_wash/blocs/login/login_bloc.dart';
+import 'package:car_wash/cubits/internet/internet_cubit.dart';
+import 'package:car_wash/models/user_details.dart';
+import 'package:car_wash/repos/authRepo.dart';
+import 'package:car_wash/routes/router.dart';
+import 'package:car_wash/services/auth_service.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
-import 'routes/landing.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  await Hive.initFlutter();
+  Hive.registerAdapter(UserDetailsAdapter());
+  await Hive.openBox('auth_service_box');
+  AuthService.instance.initialize();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  runApp(MaterialApp(
-    title: 'Flutter Navigation',
-    theme: ThemeData(
-      // This is the theme of your application.
-      primarySwatch: Colors.green,
-    ),
-    // home: FirstRoute(),
-    initialRoute: '/landing',
-    routes: {
-      '/landing': (context) => LandingRoute(),
-      '/signin': (context) => SignInRoute(),
-      '/base': (context) => BasePath()
-    },
+  runApp(MyApp(
+    connectivity: Connectivity(),
+    appRouter: AppRouter(),
   ));
 }
 
-class SecondRoute extends StatelessWidget {
+class MyApp extends StatelessWidget {
+  Connectivity connectivity;
+  AppRouter appRouter;
+  MyApp({
+    Key? key,
+    required this.connectivity,
+    required this.appRouter,
+  }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Second Screen"),
-      ),
-      body: Center(
-        child: TextButton(
-          // color: Colors.blueGrey,
+    return MultiRepositoryProvider(
+        providers: [RepositoryProvider<AuthRepo>(create: (context) => AuthRepo())],
+        child: MultiProvider(
+          providers: [
+            ChangeNotifierProvider.value(value: AuthService.instance),
+          ],
+          child: MultiBlocProvider(
+              providers: [
+                BlocProvider<LoginBloc>(
+                  create: (context) => LoginBloc(
+                    authService: AuthService.instance,
+                    authRepo: context.read<AuthRepo>(),
+                  ),
+                ),
+                BlocProvider<InternetCubit>(
+                    create: (context) => InternetCubit(connectivity: connectivity)),
+              ],
+              child: MaterialApp(
+                title: 'Car Wash',
+                theme: ThemeData(
+                  primarySwatch: Colors.green,
+                ),
+                onGenerateRoute: appRouter.onGenerateRoute,
+                // home: BlocListener<InternetCubit, InternetState>(
+                //   listener: (context, state) {
+                //     if (state is InternetDisconnected) {
+                //       // _showSnackBar(context, "No Internet Access!", 100000);
+                //     } else if (state is InternetConnected) {
+                //       // _showSnackBar(context, "Internet Connected!", 4000);
+                //     }
+                //   },
+                // )
+              )),
+        ));
+  }
+
+  _showSnackBar(context, message, int duration) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        duration: Duration(milliseconds: duration),
+        action: SnackBarAction(
+          label: 'close',
           onPressed: () {
-            Navigator.pop(context);
+            // Code to execute.
           },
-          child: Text('Go back'),
         ),
       ),
     );

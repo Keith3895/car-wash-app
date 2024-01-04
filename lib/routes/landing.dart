@@ -5,6 +5,6 @@ class LandingRoute extends StatelessWidget {
   const LandingRoute({super.key});
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: LandingPage());
+    return const Scaffold(body: LandingPage());
   }
 }
