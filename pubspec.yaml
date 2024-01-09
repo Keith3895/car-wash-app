@@ -9,6 +9,7 @@ environment:
 dependencies:
   build_runner: ^2.4.7
   connectivity_plus: ^5.0.2
+  file_picker: ^6.1.1
   firebase_core: ^2.24.2
   flutter:
     sdk: flutter
@@ -29,3 +30,50 @@ flutter:
     - assets/
     - assets/icons/
   uses-material-design: true
+  fonts:
+    - family: FontAwesome5ProRegular
+      fonts:
+        - asset: assets/fonts/Font Awesome 5 Pro Regular.otf
+    - family: FontAwesome5ProLight
+      fonts:
+        - asset: assets/fonts/Font Awesome 5 Pro-Light-300.otf
+          weight: 300
+    - family: FontAwesome5ProRegular400
+      fonts:
+        - asset: assets/fonts/Font Awesome 5 Pro-Regular-400.otf
+          weight: 400
+    - family: FontAwesome5ProSolid
+      fonts:
+        - asset: assets/fonts/Font Awesome 5 Pro-Solid-900.otf
+          weight: 900
+    - family: SFProText
+      fonts:
+        - asset: assets/fonts/SF-Pro-Text-Bold.otf
+          weight: 700
+        - asset: assets/fonts/SF-Pro-Text-BoldItalic.otf
+          weight: 700
+          style: italic
+        - asset: assets/fonts/SF-Pro-Text-Heavy.otf
+          weight: 800
+        - asset: assets/fonts/SF-Pro-Text-HeavyItalic.otf
+          weight: 800
+          style: italic
+        - asset: assets/fonts/SF-Pro-Text-Light.otf
+          weight: 300
+        - asset: assets/fonts/SF-Pro-Text-LightItalic.otf
+          weight: 300
+          style: italic
+        - asset: assets/fonts/SF-Pro-Text-Medium.otf
+          weight: 500
+        - asset: assets/fonts/SF-Pro-Text-MediumItalic.otf
+          weight: 500
+          style: italic
+        - asset: assets/fonts/SF-Pro-Text-Regular.otf
+          weight: 400
+        - asset: assets/fonts/SF-Pro-Text-RegularItalic.otf
+          style: italic
+        - asset: assets/fonts/SF-Pro-Text-Semibold.otf
+          weight: 600
+        - asset: assets/fonts/SF-Pro-Text-SemiboldItalic.otf
+          weight: 600
+          style: italic

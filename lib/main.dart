@@ -61,9 +61,16 @@ class MyApp extends StatelessWidget {
               ],
               child: MaterialApp(
                 title: 'Car Wash',
+
                 theme: ThemeData(
-                  primarySwatch: Colors.green,
-                ),
+                    useMaterial3: true,
+                    colorScheme: ColorScheme.fromSwatch().copyWith(
+                      primary: Color(0xE72D0C57),
+                      secondary: Color(0xE70BCE83),
+                      tertiary: Color(0xE79586A8),
+                    ),
+                    fontFamily: 'SFProText',
+                    scaffoldBackgroundColor: Color(0xE7F8F8F8)),
                 onGenerateRoute: appRouter.onGenerateRoute,
                 // home: BlocListener<InternetCubit, InternetState>(
                 //   listener: (context, state) {
