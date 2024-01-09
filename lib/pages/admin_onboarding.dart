@@ -240,7 +240,13 @@ class _AdminOnboardingState extends State<AdminOnboarding> {
                 ),
               ],
             ),
+            SizedBox(
+              height: 18,
+            ),
             _InputLabels("Car Wash Images"),
+            SizedBox(
+              height: 18,
+            ),
             FilePickerWidget(
               key: const Key('File Picker'),
               onFilePicked: (result) {

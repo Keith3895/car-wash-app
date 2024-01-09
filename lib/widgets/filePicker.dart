@@ -50,12 +50,13 @@ class _FilePickerWidget extends State<FilePickerWidget> {
         margin: EdgeInsets.symmetric(horizontal: 10),
         child: Wrap(
           spacing: 22,
+          runSpacing: 10,
           children: [
+            // show images
+            if (_paths != null) ..._paths!.map((e) => cards(e.path)),
             cardButton(onPressed: () {
               _pickFiles();
             }),
-            // show images
-            if (_paths != null) ..._paths!.map((e) => cards(e.path))
           ],
         ));
   }
