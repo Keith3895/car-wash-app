@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:car_wash/blocs/login/login_bloc.dart';
 import 'package:car_wash/cubits/internet/internet_cubit.dart';
 import 'package:car_wash/cubits/logout/logout_cubit.dart';
@@ -9,11 +11,21 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
+import 'package:google_maps_flutter_android/google_maps_flutter_android.dart';
+import 'package:google_maps_flutter_platform_interface/google_maps_flutter_platform_interface.dart';
 
 Future<void> main() async {
+  // PermissionStatus status = await Permission.locationWhenInUse.request();
+
+  // if (status.isGranted) {
+  //   // Permission granted, proceed with your functionality
+  // } else {
+  //   // Permission not granted, handle accordingly
+  // }
   await Hive.initFlutter();
   Hive.registerAdapter(UserDetailsAdapter());
   await Hive.openBox('auth_service_box');
@@ -21,11 +33,38 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-
+  final GoogleMapsFlutterPlatform mapsImplementation = GoogleMapsFlutterPlatform.instance;
+  if (mapsImplementation is GoogleMapsFlutterAndroid) {
+    mapsImplementation.useAndroidViewSurface = false;
+    initializeMapRenderer();
+  }
   runApp(MyApp(
     connectivity: Connectivity(),
     appRouter: AppRouter(),
   ));
+}
+
+Completer<AndroidMapRenderer?>? _initializedRendererCompleter;
+Future<AndroidMapRenderer?> initializeMapRenderer() async {
+  if (_initializedRendererCompleter != null) {
+    return _initializedRendererCompleter!.future;
+  }
+
+  final Completer<AndroidMapRenderer?> completer = Completer<AndroidMapRenderer?>();
+  _initializedRendererCompleter = completer;
+
+  WidgetsFlutterBinding.ensureInitialized();
+
+  final GoogleMapsFlutterPlatform mapsImplementation = GoogleMapsFlutterPlatform.instance;
+  if (mapsImplementation is GoogleMapsFlutterAndroid) {
+    unawaited(mapsImplementation
+        .initializeWithRenderer(AndroidMapRenderer.latest)
+        .then((AndroidMapRenderer initializedRenderer) => completer.complete(initializedRenderer)));
+  } else {
+    completer.complete(null);
+  }
+
+  return completer.future;
 }
 
 class MyApp extends StatelessWidget {
@@ -60,6 +99,7 @@ class MyApp extends StatelessWidget {
                 ),
               ],
               child: MaterialApp(
+                debugShowCheckedModeBanner: false,
                 title: 'Car Wash',
 
                 theme: ThemeData(

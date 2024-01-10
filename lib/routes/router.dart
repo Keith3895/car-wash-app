@@ -1,4 +1,4 @@
-import 'package:car_wash/pages/admin_onboarding.dart';
+import 'package:car_wash/pages/onboarding/admin_onboarding.dart';
 import 'package:car_wash/routes/base.dart';
 import 'package:car_wash/routes/landing.dart';
 import 'package:car_wash/routes/signin.dart';
