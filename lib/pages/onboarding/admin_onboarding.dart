@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:car_wash/pages/onboarding/widgets/page_one.dart';
 import 'package:car_wash/pages/onboarding/widgets/page_three.dart';
 import 'package:car_wash/pages/onboarding/widgets/page_two.dart';
@@ -193,7 +191,7 @@ class _AdminOnboardingState extends State<AdminOnboarding> {
               InputLabels(label: "Address"),
               InputField(
                 key: const Key('Address'),
-                ftIcon: "\uf5e4",
+                ftIcon: "\uf601",
                 labelText: "Address",
                 skipLabel: true,
                 controller: address,

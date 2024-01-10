@@ -1,3 +1,4 @@
+import 'package:car_wash/services/FieldValidators.dart';
 import 'package:car_wash/widgets/inputField.dart';
 import 'package:car_wash/widgets/inputLabel.dart';
 import 'package:flutter/material.dart';
@@ -57,6 +58,7 @@ class _PageOneState extends State<PageOne> {
               labelText: "Car Wash Name",
               skipLabel: true,
               controller: car_wash_name,
+              validator: FieldValidators.validateName(car_wash_name.text),
             ),
             const SizedBox(
               height: 70,
@@ -77,6 +79,7 @@ class _PageOneState extends State<PageOne> {
               skipLabel: true,
               ftIcon: "\uf095",
               controller: phone_number,
+              validator: FieldValidators.validateMobile(phone_number.text),
             ),
             InputField(
               key: const Key('email'),
@@ -84,6 +87,7 @@ class _PageOneState extends State<PageOne> {
               skipLabel: true,
               ftIcon: "\uf1fa",
               controller: email,
+              validator: FieldValidators.validateEmail(email.text),
             )
           ],
         ));
