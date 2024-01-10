@@ -18,3 +18,11 @@ class OnboadSuccess extends OnboardState {
   @override
   List<Object> get props => [message];
 }
+
+class OnboardError extends OnboardState {
+  const OnboardError({required this.message});
+  final String message;
+
+  @override
+  List<Object> get props => [message];
+}

@@ -1,10 +1,12 @@
 import 'dart:async';
 
 import 'package:car_wash/blocs/login/login_bloc.dart';
+import 'package:car_wash/blocs/onboard/onboard_bloc.dart';
 import 'package:car_wash/cubits/internet/internet_cubit.dart';
 import 'package:car_wash/cubits/logout/logout_cubit.dart';
 import 'package:car_wash/models/user_details.dart';
 import 'package:car_wash/repos/authRepo.dart';
+import 'package:car_wash/repos/vendorRepo.dart';
 import 'package:car_wash/routes/router.dart';
 import 'package:car_wash/services/auth_service.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
@@ -79,7 +81,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiRepositoryProvider(
-        providers: [RepositoryProvider<AuthRepo>(create: (context) => AuthRepo())],
+        providers: [
+          RepositoryProvider<AuthRepo>(create: (context) => AuthRepo()),
+          RepositoryProvider<VendorRepo>(create: (context) => VendorRepo())
+        ],
         child: MultiProvider(
           providers: [
             ChangeNotifierProvider.value(value: AuthService.instance),
@@ -97,6 +102,8 @@ class MyApp extends StatelessWidget {
                 BlocProvider(
                   create: (context) => LogoutCubit(context.read<AuthRepo>()),
                 ),
+                BlocProvider<OnboardBloc>(
+                    create: (context) => OnboardBloc(vendorRepo: context.read<VendorRepo>()))
               ],
               child: MaterialApp(
                 debugShowCheckedModeBanner: false,

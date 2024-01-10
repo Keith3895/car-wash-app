@@ -58,7 +58,7 @@ class _PageOneState extends State<PageOne> {
               labelText: "Car Wash Name",
               skipLabel: true,
               controller: car_wash_name,
-              validator: FieldValidators.validateName(car_wash_name.text),
+              validator: (value) => FieldValidators.validateName(value.toString()),
             ),
             const SizedBox(
               height: 70,
@@ -79,7 +79,7 @@ class _PageOneState extends State<PageOne> {
               skipLabel: true,
               ftIcon: "\uf095",
               controller: phone_number,
-              validator: FieldValidators.validateMobile(phone_number.text),
+              validator: (value) => FieldValidators.validateMobile(value.toString()),
             ),
             InputField(
               key: const Key('email'),
@@ -87,7 +87,7 @@ class _PageOneState extends State<PageOne> {
               skipLabel: true,
               ftIcon: "\uf1fa",
               controller: email,
-              validator: FieldValidators.validateEmail(email.text),
+              validator: (value) => FieldValidators.validateEmail(value.toString()),
             )
           ],
         ));

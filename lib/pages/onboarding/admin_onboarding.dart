@@ -1,6 +1,9 @@
+import 'package:car_wash/blocs/onboard/onboard_bloc.dart';
+import 'package:car_wash/models/car_wash.dart';
 import 'package:car_wash/pages/onboarding/widgets/page_one.dart';
 import 'package:car_wash/pages/onboarding/widgets/page_three.dart';
 import 'package:car_wash/pages/onboarding/widgets/page_two.dart';
+import 'package:car_wash/repos/vendorRepo.dart';
 import 'package:car_wash/widgets/AppBar.dart';
 import 'package:car_wash/widgets/ElevatedButton.dart';
 import 'package:car_wash/widgets/cardButton.dart';
@@ -9,6 +12,7 @@ import 'package:car_wash/widgets/inputLabel.dart';
 import 'package:car_wash/widgets/regularButtion.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AdminOnboarding extends StatefulWidget {
   @override
@@ -45,95 +49,113 @@ class _AdminOnboardingState extends State<AdminOnboarding> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: CustomAppBar('Setup Profile'),
-        body: SingleChildScrollView(
-          child: Container(
-            child: Column(
-              children: [
-                _progressBar(),
-                SizedBox(
-                  height: 20,
-                ),
-                Text("Car Wash Details",
-                    style: TextStyle(
-                        fontSize: 34,
-                        fontWeight: FontWeight.w700,
-                        color: Theme.of(context).colorScheme.primary)),
-                _pageView(),
-                Container(
-                    width: double.infinity,
-                    margin: EdgeInsets.symmetric(horizontal: 20),
-                    child: Wrap(
-                      children: [
-                        if (_pageNumber == 1)
-                          RegularButton(
-                            text: 'Skip',
+        body: BlocListener<OnboardBloc, OnboardState>(
+          listener: (context, state) {
+            if (state is OnboadSuccess) {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.message)));
+            } else if (state is OnboardError) {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.message)));
+            }
+          },
+          child: SingleChildScrollView(
+            child: Container(
+              child: Column(
+                children: [
+                  _progressBar(context),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Text("Car Wash Details",
+                      style: TextStyle(
+                          fontSize: 34,
+                          fontWeight: FontWeight.w700,
+                          color: Theme.of(context).colorScheme.primary)),
+                  _pageView(context),
+                  Container(
+                      width: double.infinity,
+                      margin: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Wrap(
+                        children: [
+                          if (_pageNumber == 1)
+                            RegularButton(
+                              text: 'Skip',
+                              onPressed: () {
+                                _pageController.animateToPage(
+                                  _pageNumber = 2,
+                                  duration: const Duration(milliseconds: 500),
+                                  curve: Curves.ease,
+                                );
+                                setState(() {
+                                  _pageNumber = 2;
+                                });
+                              },
+                              key: const Key('skip Button'),
+                            ),
+                          CustomElevatedButton(
+                            text: _pageNumber == 3 ? 'Finish' : 'Next',
                             onPressed: () {
-                              _pageController.animateToPage(
-                                _pageNumber = 2,
-                                duration: Duration(milliseconds: 500),
-                                curve: Curves.ease,
-                              );
-                              setState(() {
-                                _pageNumber = 2;
-                              });
+                              if (_pageNumber < 3) {
+                                _pageController.animateToPage(
+                                  _pageNumber + 1,
+                                  duration: const Duration(milliseconds: 500),
+                                  curve: Curves.ease,
+                                );
+                                setState(() {
+                                  _pageNumber++;
+                                });
+                              } else {
+                                CarWash carWash = CarWash.fromflatStructure(
+                                    car_wash_name: car_wash_name.text,
+                                    phone_number: phone_number.text,
+                                    email: email.text,
+                                    address: address.text,
+                                    bank_account_number: bank_account_number.text,
+                                    IFSC: IFSC.text,
+                                    UPID: UPID.text,
+                                    gstn: gstn.text,
+                                    PAN: PAN.text,
+                                    registered_company_name: registered_company_name.text);
+                                print(carWash.toJson());
+                                context
+                                    .read<OnboardBloc>()
+                                    .add(AddCarWashDetails(carWashDetails: carWash));
+                                Navigator.pushNamed(context, '/admin');
+                              }
                             },
-                            key: const Key('skip Button'),
+                            key: const Key('next Button'),
                           ),
-                        CustomElevatedButton(
-                          text: _pageNumber == 3 ? 'Finish' : 'Next',
-                          onPressed: () {
-                            if (_pageNumber < 3) {
-                              _pageController.animateToPage(
-                                _pageNumber + 1,
-                                duration: Duration(milliseconds: 500),
-                                curve: Curves.ease,
-                              );
-                              setState(() {
-                                _pageNumber++;
-                              });
-                            } else {
-                              print(car_wash_name.text);
-                              print(phone_number.text);
-                              print(email.text);
-                              print(gstn.text);
-                              print(PAN.text);
-                              print(registered_company_name.text);
-                              Navigator.pushNamed(context, '/admin');
-                            }
-                          },
-                          key: const Key('next Button'),
-                        ),
-                        if (_pageNumber != 0)
-                          RegularButton(
-                            text: 'Back',
-                            onPressed: () {
-                              _pageController.animateToPage(
-                                _pageNumber - 1,
-                                duration: Duration(milliseconds: 500),
-                                curve: Curves.ease,
-                              );
-                              setState(() {
-                                _pageNumber--;
-                              });
-                            },
-                            key: const Key('back Button'),
-                          ),
-                      ],
-                    ))
-              ],
+                          if (_pageNumber != 0)
+                            RegularButton(
+                              text: 'Back',
+                              onPressed: () {
+                                _pageController.animateToPage(
+                                  _pageNumber - 1,
+                                  duration: const Duration(milliseconds: 500),
+                                  curve: Curves.ease,
+                                );
+                                setState(() {
+                                  _pageNumber--;
+                                });
+                              },
+                              key: const Key('back Button'),
+                            ),
+                        ],
+                      ))
+                ],
+              ),
             ),
           ),
         ));
   }
 
-  Widget _progressBar() {
+  Widget _progressBar(BuildContext context) {
     return LinearProgressIndicator(
       value: _pageNumber / 3,
       valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).colorScheme.secondary),
     );
   }
 
-  Widget _pageView() {
+  Widget _pageView(BuildContext context) {
     return SizedBox(
       height: 500,
       child: PageView(
@@ -173,12 +195,12 @@ class _AdminOnboardingState extends State<AdminOnboarding> {
 
   Widget _pageFour() {
     return Container(
-        margin: EdgeInsets.symmetric(horizontal: 20),
+        margin: const EdgeInsets.symmetric(horizontal: 20),
         child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              InputLabels(
+              const InputLabels(
                 label: "Car Wash Name",
               ),
               InputField(
@@ -188,7 +210,7 @@ class _AdminOnboardingState extends State<AdminOnboarding> {
                   skipLabel: true,
                   controller: car_wash_name,
                   enabled: false),
-              InputLabels(label: "Address"),
+              const InputLabels(label: "Address"),
               InputField(
                 key: const Key('Address'),
                 ftIcon: "\uf601",
@@ -197,7 +219,7 @@ class _AdminOnboardingState extends State<AdminOnboarding> {
                 controller: address,
                 enabled: false,
               ),
-              InputLabels(label: "Contact Info"),
+              const InputLabels(label: "Contact Info"),
               InputField(
                 key: const Key('phone number'),
                 labelText: "Phone Number",
@@ -214,9 +236,9 @@ class _AdminOnboardingState extends State<AdminOnboarding> {
                 controller: email,
                 enabled: false,
               ),
-              InputLabels(label: "Services"),
+              const InputLabels(label: "Services"),
               Container(
-                margin: EdgeInsets.symmetric(horizontal: 10),
+                margin: const EdgeInsets.symmetric(horizontal: 10),
                 child: Wrap(spacing: 22, runSpacing: 10, children: [
                   // show images
                   cardButton(onPressed: () {}),
