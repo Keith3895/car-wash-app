@@ -116,4 +116,32 @@ class AuthRepo {
     }
     return (false, message);
   }
+
+  Future<UserDetails?> updateUserDetails(UserDetails userDetails) async {
+    String _accessToken = AuthService.instance.accessToken;
+    var message;
+    final url = Uri.parse("http://10.0.2.2:8000/api/auth/user/update/");
+    try {
+      final _headers = {
+        HttpHeaders.contentTypeHeader: 'application/json',
+        HttpHeaders.authorizationHeader: 'Bearer $_accessToken'
+      };
+      http.Response response = await client!.patch(
+        url,
+        headers: _headers,
+        body: utf8.encode(json.encode(userDetails.toJson())),
+      );
+      if (response.statusCode == 200) {
+        final _responseBody = jsonDecode(response.body);
+        AuthService.instance.updateCurrentUser(UserDetails.fromJson(_responseBody));
+        return UserDetails.fromJson(_responseBody);
+      } else {
+        message = "Something went wrong on the backend.";
+      }
+    } on SocketException catch (e) {
+      message = e.message;
+    } catch (e) {
+      message = "Something went wrong!";
+    }
+  }
 }

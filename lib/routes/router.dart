@@ -16,11 +16,11 @@ class AppRouter {
         return MaterialPageRoute(
           builder: (_) => const SignInRoute(),
         );
-      case '/base1':
+      case '/base':
         return MaterialPageRoute(
           builder: (_) => const BasePath(),
         );
-      case '/base':
+      case '/onboarding':
         return MaterialPageRoute(
           builder: (_) => AdminOnboarding(),
         );

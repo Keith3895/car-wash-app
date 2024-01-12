@@ -27,6 +27,7 @@ class AuthService extends ChangeNotifier {
   UserDetails? _currentUser;
   bool get isRegistered => _accessToken != null;
   bool get isLoggedIn => _currentUser != null && isRegistered;
+  UserDetails? get currentUser => _currentUser;
 
   void initialize() {
     final accessToken = storageBox.get('access_token') as String?;

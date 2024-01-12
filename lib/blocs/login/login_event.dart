@@ -16,3 +16,11 @@ class InitiateEmailSignIn extends LoginEvent {
 }
 
 class InitiateGoogleSignIn extends LoginEvent {}
+
+class AddUserType extends LoginEvent {
+  const AddUserType({required this.userType});
+  final int userType;
+
+  @override
+  List<Object> get props => [userType];
+}

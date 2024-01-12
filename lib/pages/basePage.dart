@@ -1,5 +1,6 @@
 import 'package:car_wash/cubits/logout/logout_cubit.dart';
 import 'package:car_wash/services/auth_service.dart';
+import 'package:car_wash/widgets/loginWidgets/vendorConfirmation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -14,6 +15,9 @@ class basePageState extends State<basePage> {
   int currentPageIndex = 0;
   @override
   Widget build(BuildContext context) {
+    // if (AuthService.instance.currentUser?.user_type == null) {
+    //   VendorConfirmationModal(context);
+    // }
     return Scaffold(
         bottomNavigationBar: NavigationBar(
           labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
@@ -45,8 +49,6 @@ class basePageState extends State<basePage> {
             child: Center(
                 child: BlocConsumer<LogoutCubit, LogoutState>(
               listener: (context, state) => {
-                print('state'),
-                print(state),
                 if (state is LogoutSuccess)
                   {
                     AuthService.instance.terminate(),

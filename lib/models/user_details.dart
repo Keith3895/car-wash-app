@@ -15,10 +15,13 @@ class UserDetails {
   @JsonKey(name: 'last_name')
   final String? last_name;
   @HiveField(3)
-  @JsonKey(name: 'pk')
-  final int? pk;
+  @JsonKey(name: 'id')
+  final String? id;
+  @HiveField(4)
+  @JsonKey(name: 'user_type')
+  int? user_type;
 
-  UserDetails({this.email, this.first_name, this.last_name, this.pk});
+  UserDetails({this.email, this.first_name, this.last_name, this.id, this.user_type});
 
   factory UserDetails.fromJson(Map<String, dynamic> json) {
     return _$UserDetailsFromJson(json);
@@ -27,5 +30,5 @@ class UserDetails {
   Map<String, dynamic> toJson() => _$UserDetailsToJson(this);
 
   @override
-  List get props => [email, first_name, last_name, pk];
+  List get props => [email, first_name, last_name, id, user_type];
 }
