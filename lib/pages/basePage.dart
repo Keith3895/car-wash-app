@@ -1,3 +1,5 @@
+import 'package:car_wash/blocs/login/login_bloc.dart';
+import 'package:car_wash/blocs/onboard/onboard_bloc.dart';
 import 'package:car_wash/cubits/logout/logout_cubit.dart';
 import 'package:car_wash/services/auth_service.dart';
 import 'package:car_wash/widgets/loginWidgets/vendorConfirmation.dart';
@@ -15,9 +17,7 @@ class basePageState extends State<basePage> {
   int currentPageIndex = 0;
   @override
   Widget build(BuildContext context) {
-    // if (AuthService.instance.currentUser?.user_type == null) {
-    //   VendorConfirmationModal(context);
-    // }
+    context.read<OnboardBloc>().add(getVendorDetails());
     return Scaffold(
         bottomNavigationBar: NavigationBar(
           labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
@@ -45,37 +45,60 @@ class basePageState extends State<basePage> {
           ],
         ),
         body: <Widget>[
+          // if (AuthService.instance.currentUser?.user_type == 2) VendorConfirmationModal(context),
           Container(
             child: Center(
-                child: BlocConsumer<LogoutCubit, LogoutState>(
-              listener: (context, state) => {
-                if (state is LogoutSuccess)
-                  {
-                    AuthService.instance.terminate(),
-                    Navigator.pushNamedAndRemoveUntil(context, '/landing', (route) => false)
+                child: MultiBlocListener(
+              listeners: [
+                BlocListener<LogoutCubit, LogoutState>(
+                  listener: (context, state) => {
+                    if (state is LogoutSuccess)
+                      {
+                        AuthService.instance.terminate(),
+                        Navigator.pushNamedAndRemoveUntil(context, '/landing', (route) => false)
+                      }
+                    else if (state is LogoutFailure)
+                      {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(state.message),
+                            duration: const Duration(seconds: 2),
+                          ),
+                        )
+                      }
+                  },
+                ),
+                BlocListener<LoginBloc, LoginState>(listener: (context, state) {
+                  if (state is AddUserTypeSuccess) {
+                    if (AuthService.instance.currentUser?.user_type == 2) {
+                      Navigator.pushNamedAndRemoveUntil(context, '/onboarding', (route) => false);
+                    }
+                    Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
                   }
-                else if (state is LogoutFailure)
-                  {
+                }),
+                BlocListener<OnboardBloc, OnboardState>(listener: (context, state) {
+                  if (state is OnboadSuccess) {
+                    Navigator.pushNamedAndRemoveUntil(context, '/base', (route) => false);
+                  }
+                  if (state is NoVendorDetails) {
+                    Navigator.pushNamedAndRemoveUntil(context, '/onboarding', (route) => false);
+                  }
+                  if (state is OnboardError) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text(state.message),
                         duration: const Duration(seconds: 2),
                       ),
-                    )
+                    );
                   }
-              },
-              builder: (context, state) {
-                if (state is LogoutLoading) {
-                  return const CircularProgressIndicator();
-                } else {
-                  return ElevatedButton(
-                    onPressed: () {
-                      context.read<LogoutCubit>().logout();
-                    },
-                    child: const Text('Logout'),
-                  );
-                }
-              },
+                })
+              ],
+              child: ElevatedButton(
+                onPressed: () {
+                  context.read<LogoutCubit>().logout();
+                },
+                child: const Text('Logout'),
+              ),
             )),
           ),
         ][currentPageIndex]);

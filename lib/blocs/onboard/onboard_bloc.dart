@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:car_wash/models/car_wash.dart';
 import 'package:car_wash/repos/vendorRepo.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,6 +11,7 @@ class OnboardBloc extends Bloc<OnboardEvent, OnboardState> {
   final VendorRepo vendorRepo;
   OnboardBloc({required this.vendorRepo}) : super(OnboardInitial()) {
     on<AddCarWashDetails>((event, emit) async => addCarWash(emit, event: event));
+    on<getVendorDetails>((event, emit) async => emit(NoVendorDetails()));
   }
 
   addCarWash(Emitter<OnboardState> emit, {AddCarWashDetails? event}) async {

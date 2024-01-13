@@ -1,31 +1,38 @@
+import 'package:car_wash/services/auth_service.dart';
 import 'package:json_annotation/json_annotation.dart';
 part 'car_wash.g.dart';
 
 @JsonSerializable()
 class CarWash {
-  @JsonKey(name: 'car_wash_name')
-  String? car_wash_name;
+  @JsonKey(name: 'id')
+  String? id;
+  @JsonKey(name: 'uid')
+  String? uid;
+  @JsonKey(name: 'company_name')
+  String? company_name;
   @JsonKey(name: 'phone_number')
   String? phone_number;
   @JsonKey(name: 'email')
   String? email;
   @JsonKey(name: 'address')
   String? address;
-  @JsonKey(name: 'bank_account')
-  Account? bank_account;
-  @JsonKey(name: 'documentation')
-  carWashDocumentation? documentation;
+  @JsonKey(name: 'payment_information')
+  Account? payment_information;
+  @JsonKey(name: 'kyc')
+  carWashDocumentation? kyc;
 
   CarWash(
-      {this.car_wash_name,
+      {this.id,
+      this.uid,
+      this.company_name,
       this.phone_number,
       this.email,
       this.address,
-      this.bank_account,
-      this.documentation});
+      this.payment_information,
+      this.kyc});
 
   factory CarWash.fromflatStructure(
-      {String? car_wash_name,
+      {String? company_name,
       String? phone_number,
       String? email,
       String? address,
@@ -34,14 +41,18 @@ class CarWash {
       String? UPID,
       String? gstn,
       String? PAN,
-      String? registered_company_name}) {
+      String? registered_company_name,
+      String? id}) {
     return CarWash(
-        car_wash_name: car_wash_name,
+        id: id,
+        uid: AuthService.instance.currentUser!.id,
+        company_name: company_name,
         phone_number: phone_number,
         email: email,
         address: address,
-        bank_account: Account(account_number: bank_account_number, IFSC: IFSC, UPID: UPID),
-        documentation: carWashDocumentation(
+        payment_information:
+            Account(bank_account_number: bank_account_number, bank_ifsc_code: IFSC, upi_id: UPID),
+        kyc: carWashDocumentation(
             gstn: gstn, PAN: PAN, registered_company_name: registered_company_name));
   }
 
@@ -52,19 +63,19 @@ class CarWash {
   Map<String, dynamic> toJson() => _$CarWashToJson(this);
 
   @override
-  List get props => [car_wash_name, phone_number, email, address, bank_account, documentation];
+  List get props => [id, company_name, phone_number, email, address, payment_information, kyc];
 }
 
 @JsonSerializable()
 class Account {
   @JsonKey(name: 'bank_account_number')
-  final String? account_number;
+  final String? bank_account_number;
   @JsonKey(name: 'IFSC')
-  final String? IFSC;
+  final String? bank_ifsc_code;
   @JsonKey(name: 'UPID')
-  final String? UPID;
+  final String? upi_id;
 
-  Account({this.account_number, this.IFSC, this.UPID});
+  Account({this.bank_account_number, this.bank_ifsc_code, this.upi_id});
 
   factory Account.fromJson(Map<String, dynamic> json) {
     return _$AccountFromJson(json);
@@ -73,7 +84,7 @@ class Account {
   Map<String, dynamic> toJson() => _$AccountToJson(this);
 
   @override
-  List get props => [account_number, IFSC, UPID];
+  List get props => [bank_account_number, bank_ifsc_code, upi_id];
 }
 
 @JsonSerializable()

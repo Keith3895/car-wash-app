@@ -29,10 +29,10 @@ class _PageOneState extends State<PageOne> {
 
   @override
   Widget build(BuildContext context) {
-    return _pageOne();
+    return _pageOne(context);
   }
 
-  Widget _pageOne() {
+  Widget _pageOne(BuildContext context) {
     return Container(
         margin: const EdgeInsets.symmetric(horizontal: 20),
         child: Column(
@@ -59,6 +59,7 @@ class _PageOneState extends State<PageOne> {
               skipLabel: true,
               controller: car_wash_name,
               validator: (value) => FieldValidators.validateName(value.toString()),
+              onChanged: (value) => {OnSubmitEmitter(value).dispatch(context)},
             ),
             const SizedBox(
               height: 70,
@@ -80,6 +81,7 @@ class _PageOneState extends State<PageOne> {
               ftIcon: "\uf095",
               controller: phone_number,
               validator: (value) => FieldValidators.validateMobile(value.toString()),
+              onFieldSubmitted: (value) => {OnSubmitEmitter(value).dispatch(context)},
             ),
             InputField(
               key: const Key('email'),
@@ -92,4 +94,10 @@ class _PageOneState extends State<PageOne> {
           ],
         ));
   }
+}
+
+class OnSubmitEmitter extends Notification {
+  final value;
+
+  OnSubmitEmitter(this.value);
 }

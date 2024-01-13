@@ -16,16 +16,14 @@ class VendorRepo {
   // Add car wash Details
   Future addCarWashDetails({required CarWash carWashDetails}) async {
     var message = "";
-    final url = Uri.parse("http://localhost:8000/api/carwash/");
-    print(carWashDetails.toString());
-    return 'carWashDetails for ${carWashDetails.car_wash_name} added successfully';
+    final url = Uri.parse("http://10.0.2.2:8000/api/vendor/");
     try {
       http.Response response = await client!.post(url,
           headers: {
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.authorizationHeader: 'Bearer ${AuthService.instance.accessToken}'
+            HttpHeaders.contentTypeHeader: 'application/json'
+            // HttpHeaders.authorizationHeader: 'Bearer ${AuthService.instance.accessToken}'
           },
-          body: utf8.encode(json.encode(carWashDetails)));
+          body: utf8.encode(json.encode(carWashDetails.toJson())));
       if (response.statusCode == 201) {
         return true;
       } else {

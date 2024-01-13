@@ -7,38 +7,42 @@ part of 'car_wash.dart';
 // **************************************************************************
 
 CarWash _$CarWashFromJson(Map<String, dynamic> json) => CarWash(
-      car_wash_name: json['car_wash_name'] as String?,
+      id: json['id'] as String?,
+      uid: json['uid'] as String?,
+      company_name: json['company_name'] as String?,
       phone_number: json['phone_number'] as String?,
       email: json['email'] as String?,
       address: json['address'] as String?,
-      bank_account: json['bank_account'] == null
+      payment_information: json['payment_information'] == null
           ? null
-          : Account.fromJson(json['bank_account'] as Map<String, dynamic>),
-      documentation: json['documentation'] == null
+          : Account.fromJson(
+              json['payment_information'] as Map<String, dynamic>),
+      kyc: json['kyc'] == null
           ? null
-          : carWashDocumentation
-              .fromJson(json['documentation'] as Map<String, dynamic>),
+          : carWashDocumentation.fromJson(json['kyc'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$CarWashToJson(CarWash instance) => <String, dynamic>{
-      'car_wash_name': instance.car_wash_name,
+      'id': instance.id,
+      'uid': instance.uid,
+      'company_name': instance.company_name,
       'phone_number': instance.phone_number,
       'email': instance.email,
       'address': instance.address,
-      'bank_account': instance.bank_account,
-      'documentation': instance.documentation,
+      'payment_information': instance.payment_information,
+      'kyc': instance.kyc,
     };
 
 Account _$AccountFromJson(Map<String, dynamic> json) => Account(
-      account_number: json['bank_account_number'] as String?,
-      IFSC: json['IFSC'] as String?,
-      UPID: json['UPID'] as String?,
+      bank_account_number: json['bank_account_number'] as String?,
+      bank_ifsc_code: json['IFSC'] as String?,
+      upi_id: json['UPID'] as String?,
     );
 
 Map<String, dynamic> _$AccountToJson(Account instance) => <String, dynamic>{
-      'bank_account_number': instance.account_number,
-      'IFSC': instance.IFSC,
-      'UPID': instance.UPID,
+      'bank_account_number': instance.bank_account_number,
+      'IFSC': instance.bank_ifsc_code,
+      'UPID': instance.upi_id,
     };
 
 carWashDocumentation _$carWashDocumentationFromJson(

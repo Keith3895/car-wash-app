@@ -1,4 +1,5 @@
 import 'package:car_wash/blocs/login/login_bloc.dart';
+import 'package:car_wash/services/auth_service.dart';
 import 'package:car_wash/widgets/ElevatedButton.dart';
 import 'package:car_wash/widgets/inputLabel.dart';
 import 'package:car_wash/widgets/loginWidgets/loginBackdrop.dart';

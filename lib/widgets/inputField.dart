@@ -14,7 +14,8 @@ class InputField extends StatefulWidget {
       this.controller,
       this.ftIcon,
       this.skipLabel = false,
-      this.enabled = true});
+      this.enabled = true,
+      this.onChanged});
 
   final Key? fieldKey;
   final String hintText;
@@ -23,6 +24,7 @@ class InputField extends StatefulWidget {
   final FormFieldSetter<String>? onSaved;
   final FormFieldValidator<String>? validator;
   final ValueChanged<String>? onFieldSubmitted;
+  final ValueChanged<String>? onChanged;
   final int? maxLength;
   final TextEditingController? controller;
   final String? ftIcon;
@@ -58,6 +60,7 @@ class _InputField extends State<InputField> {
           ),
           validator: widget.validator,
           onSaved: widget.onSaved,
+          onChanged: widget.onChanged,
           controller: widget.controller,
           decoration: _inputDecoration(),
         )

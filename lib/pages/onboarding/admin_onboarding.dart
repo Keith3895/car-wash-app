@@ -33,6 +33,9 @@ class _AdminOnboardingState extends State<AdminOnboarding> {
   final address = TextEditingController();
 
   late final PageController _pageController;
+
+  final _formKey = GlobalKey<FormState>();
+
   @override
   void initState() {
     super.initState();
@@ -75,6 +78,7 @@ class _AdminOnboardingState extends State<AdminOnboarding> {
                       width: double.infinity,
                       margin: const EdgeInsets.symmetric(horizontal: 20),
                       child: Wrap(
+                        alignment: WrapAlignment.center,
                         children: [
                           if (_pageNumber == 1)
                             RegularButton(
@@ -105,7 +109,7 @@ class _AdminOnboardingState extends State<AdminOnboarding> {
                                 });
                               } else {
                                 CarWash carWash = CarWash.fromflatStructure(
-                                    car_wash_name: car_wash_name.text,
+                                    company_name: car_wash_name.text,
                                     phone_number: phone_number.text,
                                     email: email.text,
                                     address: address.text,
@@ -115,11 +119,9 @@ class _AdminOnboardingState extends State<AdminOnboarding> {
                                     gstn: gstn.text,
                                     PAN: PAN.text,
                                     registered_company_name: registered_company_name.text);
-                                print(carWash.toJson());
                                 context
                                     .read<OnboardBloc>()
                                     .add(AddCarWashDetails(carWashDetails: carWash));
-                                Navigator.pushNamed(context, '/admin');
                               }
                             },
                             key: const Key('next Button'),
@@ -157,40 +159,52 @@ class _AdminOnboardingState extends State<AdminOnboarding> {
 
   Widget _pageView(BuildContext context) {
     return SizedBox(
-      height: 500,
-      child: PageView(
-        controller: _pageController,
-        onPageChanged: (int page) {
-          setState(() {
-            _pageNumber = page;
-          });
-        },
-        children: [
-          PageOne(
-            key: const Key('Page One'),
-            car_wash_name: car_wash_name,
-            phone_number: phone_number,
-            email: email,
-          ),
-          SingleChildScrollView(
-              child: PageTwo(
-            key: const Key('Page Two'),
-            gstn: gstn,
-            PAN: PAN,
-            registered_company_name: registered_company_name,
-            bank_account_number: bank_account_number,
-            IFSC: IFSC,
-            UPID: UPID,
-          )),
-          SingleChildScrollView(
-              child: PageThree(
-            key: const Key('Page Three'),
-            address: address,
-          )),
-          SingleChildScrollView(child: _pageFour())
-        ],
-      ),
-    );
+        height: 500,
+        child: NotificationListener<OnSubmitEmitter>(
+          onNotification: (OnSubmitEmitter notification) {
+            print(notification.value);
+            if (_formKey.currentState!.validate()) {
+              _formKey.currentState!.save();
+              // notification.callback();
+            }
+            return true;
+          },
+          child: Form(
+              key: _formKey,
+              child: PageView(
+                controller: _pageController,
+                onPageChanged: (int page) {
+                  setState(() {
+                    _pageNumber = page;
+                  });
+                },
+                children: [
+                  SingleChildScrollView(
+                      child: PageOne(
+                    key: const Key('Page One'),
+                    car_wash_name: car_wash_name,
+                    phone_number: phone_number,
+                    email: email,
+                  )),
+                  SingleChildScrollView(
+                      child: PageTwo(
+                    key: const Key('Page Two'),
+                    gstn: gstn,
+                    PAN: PAN,
+                    registered_company_name: registered_company_name,
+                    bank_account_number: bank_account_number,
+                    IFSC: IFSC,
+                    UPID: UPID,
+                  )),
+                  SingleChildScrollView(
+                      child: PageThree(
+                    key: const Key('Page Three'),
+                    address: address,
+                  )),
+                  SingleChildScrollView(child: _pageFour())
+                ],
+              )),
+        ));
   }
 
   Widget _pageFour() {

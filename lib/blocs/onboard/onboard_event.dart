@@ -12,3 +12,7 @@ class AddCarWashDetails extends OnboardEvent {
   @override
   List<Object> get props => [carWashDetails];
 }
+
+class getVendorDetails extends OnboardEvent {
+  const getVendorDetails();
+}

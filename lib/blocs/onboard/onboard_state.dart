@@ -26,3 +26,10 @@ class OnboardError extends OnboardState {
   @override
   List<Object> get props => [message];
 }
+
+class NoVendorDetails extends OnboardState {
+  const NoVendorDetails();
+
+  @override
+  List<Object> get props => [];
+}
