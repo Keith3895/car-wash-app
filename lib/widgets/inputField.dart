@@ -15,7 +15,8 @@ class InputField extends StatefulWidget {
       this.ftIcon,
       this.skipLabel = false,
       this.enabled = true,
-      this.onChanged});
+      this.onChanged,
+      this.suffixIcon});
 
   final Key? fieldKey;
   final String hintText;
@@ -30,6 +31,7 @@ class InputField extends StatefulWidget {
   final String? ftIcon;
   final bool skipLabel;
   final bool enabled;
+  final Widget? suffixIcon;
   @override
   _InputField createState() => _InputField();
 }
@@ -82,6 +84,7 @@ class _InputField extends State<InputField> {
           fillColor: Colors.white,
           filled: true,
           prefixIcon: _AddIcon(widget.ftIcon),
+          suffixIcon: widget.suffixIcon,
           contentPadding: const EdgeInsets.all(13));
     } else {
       return InputDecoration(

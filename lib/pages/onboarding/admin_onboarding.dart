@@ -10,6 +10,7 @@ import 'package:car_wash/widgets/cardButton.dart';
 import 'package:car_wash/widgets/inputField.dart';
 import 'package:car_wash/widgets/inputLabel.dart';
 import 'package:car_wash/widgets/regularButtion.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -31,10 +32,15 @@ class _AdminOnboardingState extends State<AdminOnboarding> {
   final IFSC = TextEditingController();
   final UPID = TextEditingController();
   final address = TextEditingController();
-
+  var addressObj;
+  var gstCertificate;
+  final AdharNumber = TextEditingController();
+  List<PlatformFile> filesList = [];
   late final PageController _pageController;
 
   final _formKey = GlobalKey<FormState>();
+
+  final _page2Key = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -52,102 +58,112 @@ class _AdminOnboardingState extends State<AdminOnboarding> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: CustomAppBar('Setup Profile'),
-        body: BlocListener<OnboardBloc, OnboardState>(
+        body: SingleChildScrollView(
+            child: BlocListener<OnboardBloc, OnboardState>(
           listener: (context, state) {
             if (state is OnboadSuccess) {
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.message)));
+              Navigator.pushNamedAndRemoveUntil(context, '/base', (route) => false);
             } else if (state is OnboardError) {
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.message)));
             }
           },
-          child: SingleChildScrollView(
-            child: Container(
-              child: Column(
-                children: [
-                  _progressBar(context),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Text("Car Wash Details",
-                      style: TextStyle(
-                          fontSize: 34,
-                          fontWeight: FontWeight.w700,
-                          color: Theme.of(context).colorScheme.primary)),
-                  _pageView(context),
-                  Container(
-                      width: double.infinity,
-                      margin: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Wrap(
-                        alignment: WrapAlignment.center,
-                        children: [
-                          if (_pageNumber == 1)
-                            RegularButton(
-                              text: 'Skip',
-                              onPressed: () {
-                                _pageController.animateToPage(
-                                  _pageNumber = 2,
-                                  duration: const Duration(milliseconds: 500),
-                                  curve: Curves.ease,
-                                );
-                                setState(() {
-                                  _pageNumber = 2;
-                                });
-                              },
-                              key: const Key('skip Button'),
-                            ),
-                          CustomElevatedButton(
-                            text: _pageNumber == 3 ? 'Finish' : 'Next',
+          // child: SingleChildScrollView(
+          child: Container(
+            child: Column(
+              children: [
+                _progressBar(context),
+                const SizedBox(
+                  height: 20,
+                ),
+                Text("Car Wash Details",
+                    style: TextStyle(
+                        fontSize: 34,
+                        fontWeight: FontWeight.w700,
+                        color: Theme.of(context).colorScheme.primary)),
+                _pageView(context),
+                Container(
+                    width: double.infinity,
+                    margin: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Wrap(
+                      alignment: WrapAlignment.center,
+                      children: [
+                        if (_pageNumber == 1)
+                          RegularButton(
+                            text: 'Skip',
                             onPressed: () {
-                              if (_pageNumber < 3) {
-                                _pageController.animateToPage(
-                                  _pageNumber + 1,
-                                  duration: const Duration(milliseconds: 500),
-                                  curve: Curves.ease,
-                                );
-                                setState(() {
-                                  _pageNumber++;
-                                });
-                              } else {
-                                CarWash carWash = CarWash.fromflatStructure(
-                                    company_name: car_wash_name.text,
-                                    phone_number: phone_number.text,
-                                    email: email.text,
-                                    address: address.text,
-                                    bank_account_number: bank_account_number.text,
-                                    IFSC: IFSC.text,
-                                    UPID: UPID.text,
-                                    gstn: gstn.text,
-                                    PAN: PAN.text,
-                                    registered_company_name: registered_company_name.text);
-                                context
-                                    .read<OnboardBloc>()
-                                    .add(AddCarWashDetails(carWashDetails: carWash));
-                              }
+                              _pageController.animateToPage(
+                                _pageNumber = 2,
+                                duration: const Duration(milliseconds: 500),
+                                curve: Curves.ease,
+                              );
+                              setState(() {
+                                _pageNumber = 2;
+                              });
                             },
-                            key: const Key('next Button'),
+                            key: const Key('skip Button'),
                           ),
-                          if (_pageNumber != 0)
-                            RegularButton(
-                              text: 'Back',
-                              onPressed: () {
-                                _pageController.animateToPage(
-                                  _pageNumber - 1,
-                                  duration: const Duration(milliseconds: 500),
-                                  curve: Curves.ease,
-                                );
-                                setState(() {
-                                  _pageNumber--;
-                                });
-                              },
-                              key: const Key('back Button'),
-                            ),
-                        ],
-                      ))
-                ],
-              ),
+                        CustomElevatedButton(
+                          text: _pageNumber == 3 ? 'Finish' : 'Next',
+                          onPressed: onSubmitPressed,
+                          key: const Key('next Button'),
+                        ),
+                        if (_pageNumber != 0)
+                          RegularButton(
+                            text: 'Back',
+                            onPressed: () {
+                              _pageController.animateToPage(
+                                _pageNumber - 1,
+                                duration: const Duration(milliseconds: 500),
+                                curve: Curves.ease,
+                              );
+                              setState(() {
+                                _pageNumber--;
+                              });
+                            },
+                            key: const Key('back Button'),
+                          ),
+                      ],
+                    ))
+              ],
             ),
           ),
-        ));
+          // ),
+        )));
+  }
+
+  onSubmitPressed() {
+    if (_pageNumber == 1) {
+      if (_page2Key.currentState!.validate()) {
+        _page2Key.currentState!.save();
+      }
+    }
+    if (_pageNumber < 3) {
+      _pageController.animateToPage(
+        _pageNumber + 1,
+        duration: const Duration(milliseconds: 500),
+        curve: Curves.ease,
+      );
+      setState(() {
+        _pageNumber++;
+      });
+    } else {
+      CarWash carWash = CarWash.fromflatStructure(
+          company_name: car_wash_name.text,
+          phone_number: phone_number.text,
+          email: email.text,
+          address: addressObj,
+          bank_account_number: bank_account_number.text,
+          IFSC: IFSC.text,
+          UPID: UPID.text,
+          gstn: gstn.text,
+          PAN: PAN.text,
+          vendor_images_files: filesList,
+          gst_certificate_file: gstCertificate,
+          adhar_number: AdharNumber.text,
+          registered_company_name: registered_company_name.text);
+      context.read<OnboardBloc>().add(AddCarWashDetails(carWashDetails: carWash));
+    }
   }
 
   Widget _progressBar(BuildContext context) {
@@ -181,23 +197,39 @@ class _AdminOnboardingState extends State<AdminOnboarding> {
                 children: [
                   SingleChildScrollView(
                       child: PageOne(
+                    filesList: filesList,
                     key: const Key('Page One'),
                     car_wash_name: car_wash_name,
                     phone_number: phone_number,
                     email: email,
+                    onfilePicked: (value) {
+                      setState(() {
+                        filesList = filesList + value;
+                      });
+                    },
                   )),
                   SingleChildScrollView(
                       child: PageTwo(
-                    key: const Key('Page Two'),
-                    gstn: gstn,
-                    PAN: PAN,
-                    registered_company_name: registered_company_name,
-                    bank_account_number: bank_account_number,
-                    IFSC: IFSC,
-                    UPID: UPID,
-                  )),
+                          gstn: gstn,
+                          PAN: PAN,
+                          registered_company_name: registered_company_name,
+                          bank_account_number: bank_account_number,
+                          IFSC: IFSC,
+                          UPID: UPID,
+                          gstCertificate: gstCertificate,
+                          key: const Key('Page Two'),
+                          formKey: _page2Key,
+                          AdharNumber: AdharNumber,
+                          onFormSubmit: (value) {
+                            setState(() {
+                              gstCertificate = value;
+                            });
+                          })),
                   SingleChildScrollView(
                       child: PageThree(
+                    onAddressSet: (value) {
+                      addressObj = value;
+                    },
                     key: const Key('Page Three'),
                     address: address,
                   )),

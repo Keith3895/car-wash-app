@@ -5,10 +5,10 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
 class FilePickerWidget extends StatefulWidget {
-  FilePickerWidget({super.key, required this.onFilePicked});
+  FilePickerWidget({super.key, required this.onFilePicked, required this.filesList});
 
   final Function(List<PlatformFile>) onFilePicked;
-
+  final List<PlatformFile> filesList;
   @override
   _FilePickerWidget createState() => _FilePickerWidget();
 }
@@ -17,13 +17,9 @@ class _FilePickerWidget extends State<FilePickerWidget> {
   List<PlatformFile> _paths = [];
   bool _multiPick = true;
 
-  void _resetState() {
-    if (!mounted) {
-      return;
-    }
-    setState(() {
-      _paths = [];
-    });
+  void initState() {
+    super.initState();
+    _paths = widget.filesList;
   }
 
   void _pickFiles() async {

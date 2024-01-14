@@ -9,6 +9,7 @@ environment:
 dependencies:
   build_runner: ^2.4.7
   connectivity_plus: ^5.0.2
+  dart_jsonwebtoken: ^2.12.2
   file_picker: ^6.1.1
   firebase_core: ^2.24.2
   flutter:
@@ -22,6 +23,7 @@ dependencies:
   hive_flutter: ^1.1.0
   hive_generator: ^2.0.1
   json_serializable: ^6.7.1
+  mime: ^1.0.4
   permission_handler: ^11.1.0
 
 dev_dependencies:

@@ -1,3 +1,4 @@
+import 'package:car_wash/models/car_wash.dart';
 import 'package:car_wash/services/permissionUtils.dart';
 import 'package:car_wash/widgets/inputField.dart';
 import 'package:flutter/foundation.dart';
@@ -10,8 +11,9 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:geocoding/geocoding.dart';
 
 class PageThree extends StatefulWidget {
-  const PageThree({super.key, required this.address});
+  const PageThree({super.key, required this.address, required this.onAddressSet});
   final TextEditingController address;
+  final Function onAddressSet;
   @override
   _PageThreeState createState() => _PageThreeState();
 }
@@ -20,12 +22,17 @@ class _PageThreeState extends State<PageThree> {
   TextEditingController address = TextEditingController();
   CameraPosition? cameraPosition;
   Position? _currentPos;
+  var addressObj;
 
   @override
   void initState() {
     super.initState();
     _getCurrentLocation();
-    address = widget.address;
+    if (widget.address.text.isNotEmpty)
+      address = widget.address;
+    else {
+      address.text = "Loading...";
+    }
   }
 
   _getCurrentLocation() async {
@@ -121,6 +128,7 @@ class _PageThreeState extends State<PageThree> {
               localeIdentifier: 'en_IN');
           setState(() {
             //get place name from lat and lang
+            // ignore: prefer_interpolation_to_compose_strings
             address.text = placemarks.first.subLocality! +
                 ',' +
                 placemarks.first.locality.toString() +
@@ -128,6 +136,14 @@ class _PageThreeState extends State<PageThree> {
                 placemarks.first.administrativeArea.toString() +
                 ", " +
                 placemarks.first.postalCode.toString();
+
+            addressObj = Address(
+                city: placemarks.first.locality.toString(),
+                state: placemarks.first.administrativeArea.toString(),
+                country: placemarks.first.country.toString(),
+                zip_code: placemarks.first.postalCode.toString(),
+                address: address.text);
+            widget.onAddressSet(addressObj);
           });
         } catch (e) {
           print("------------error---------");

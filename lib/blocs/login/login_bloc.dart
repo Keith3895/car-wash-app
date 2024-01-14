@@ -41,6 +41,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       if (data.user_type == null) {
         emit(const NoUserType(message: "Login Successful"));
       }
+
       // await authService.updateCurrentUser(data.$1!);
     } else {
       emit(const LoginError(message: "Login Failed"));
