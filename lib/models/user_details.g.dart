@@ -20,14 +20,15 @@ class UserDetailsAdapter extends TypeAdapter<UserDetails> {
       email: fields[0] as String?,
       first_name: fields[1] as String?,
       last_name: fields[2] as String?,
-      pk: fields[3] as int?,
+      id: fields[3] as String?,
+      user_type: fields[4] as int?,
     );
   }
 
   @override
   void write(BinaryWriter writer, UserDetails obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(5)
       ..writeByte(0)
       ..write(obj.email)
       ..writeByte(1)
@@ -35,7 +36,9 @@ class UserDetailsAdapter extends TypeAdapter<UserDetails> {
       ..writeByte(2)
       ..write(obj.last_name)
       ..writeByte(3)
-      ..write(obj.pk);
+      ..write(obj.id)
+      ..writeByte(4)
+      ..write(obj.user_type);
   }
 
   @override
@@ -57,7 +60,8 @@ UserDetails _$UserDetailsFromJson(Map<String, dynamic> json) => UserDetails(
       email: json['email'] as String?,
       first_name: json['first_name'] as String?,
       last_name: json['last_name'] as String?,
-      pk: json['pk'] as int?,
+      id: json['id'] as String?,
+      user_type: json['user_type'] as int?,
     );
 
 Map<String, dynamic> _$UserDetailsToJson(UserDetails instance) =>
@@ -65,5 +69,6 @@ Map<String, dynamic> _$UserDetailsToJson(UserDetails instance) =>
       'email': instance.email,
       'first_name': instance.first_name,
       'last_name': instance.last_name,
-      'pk': instance.pk,
+      'id': instance.id,
+      'user_type': instance.user_type,
     };

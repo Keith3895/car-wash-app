@@ -1,6 +1,10 @@
 import 'package:car_wash/blocs/login/login_bloc.dart';
+import 'package:car_wash/services/auth_service.dart';
+import 'package:car_wash/widgets/ElevatedButton.dart';
+import 'package:car_wash/widgets/inputLabel.dart';
 import 'package:car_wash/widgets/loginWidgets/loginBackdrop.dart';
 import 'package:car_wash/widgets/loginWidgets/login_form.dart';
+import 'package:car_wash/widgets/loginWidgets/vendorConfirmation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -20,6 +24,8 @@ class SignIn extends StatelessWidget {
               Navigator.pushNamed(context, '/base');
             } else if (state is LoginError) {
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.message)));
+            } else if (state is NoUserType) {
+              VendorConfirmationModal(context);
             }
           },
           child: Container(

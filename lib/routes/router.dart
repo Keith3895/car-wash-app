@@ -1,3 +1,4 @@
+import 'package:car_wash/pages/onboarding/admin_onboarding.dart';
 import 'package:car_wash/routes/base.dart';
 import 'package:car_wash/routes/landing.dart';
 import 'package:car_wash/routes/signin.dart';
@@ -18,6 +19,10 @@ class AppRouter {
       case '/base':
         return MaterialPageRoute(
           builder: (_) => const BasePath(),
+        );
+      case '/onboarding':
+        return MaterialPageRoute(
+          builder: (_) => AdminOnboarding(),
         );
       default:
         return MaterialPageRoute(

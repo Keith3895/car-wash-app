@@ -24,6 +24,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     on<InitiateGoogleSignIn>(
       (event, emit) async => login(LoginMethod.google, emit),
     );
+    on<AddUserType>((event, emit) async => addUserType(event, emit));
   }
   Future login(LoginMethod loginMethod, Emitter<LoginState> emit,
       {InitiateEmailSignIn? event}) async {
@@ -36,10 +37,26 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       data = await authRepo.signInWithGoogle();
     }
     if (data is UserDetails) {
-      // await authService.updateCurrentUser(data.$1!);
       emit(const LoginSuccess(message: "Login Successful"));
+      if (data.user_type == null) {
+        emit(const NoUserType(message: "Login Successful"));
+      }
+
+      // await authService.updateCurrentUser(data.$1!);
     } else {
-      emit(LoginError(message: "Login Failed"));
+      emit(const LoginError(message: "Login Failed"));
+    }
+  }
+
+  Future addUserType(AddUserType event, Emitter<LoginState> emit) async {
+    UserDetails _userDetails = authService.currentUser!;
+    _userDetails.user_type = event.userType;
+    final data = await authRepo.updateUserDetails(_userDetails);
+    if (data is UserDetails) {
+      emit(const AddUserTypeSuccess(message: "User type Modified."));
+      // await authService.updateCurrentUser(data.$1!);
+    } else {
+      emit(const AddUserTypeError(message: "User type not saved."));
     }
   }
 }

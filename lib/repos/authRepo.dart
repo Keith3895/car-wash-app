@@ -89,13 +89,13 @@ class AuthRepo {
   }
 
   Future<(bool, String)> logout() async {
-    String _accessToken = AuthService.instance.accessToken;
+    String _accessToken = await AuthService.instance.getAccessToken();
     String message;
     final url = Uri.parse("http://10.0.2.2:8000/api/auth/logout/");
     try {
       final _headers = {
         HttpHeaders.contentTypeHeader: 'application/json',
-        HttpHeaders.authorizationHeader: _accessToken
+        HttpHeaders.authorizationHeader: 'Bearer $_accessToken'
       };
       http.Response response = await client!.post(
         url,
@@ -115,5 +115,59 @@ class AuthRepo {
       message = "Something went wrong!";
     }
     return (false, message);
+  }
+
+  Future<UserDetails?> updateUserDetails(UserDetails userDetails) async {
+    String _accessToken = await AuthService.instance.getAccessToken();
+    var message;
+    final url = Uri.parse("http://10.0.2.2:8000/api/auth/user/update/");
+    try {
+      final _headers = {
+        HttpHeaders.contentTypeHeader: 'application/json',
+        HttpHeaders.authorizationHeader: 'Bearer $_accessToken'
+      };
+      http.Response response = await client!.patch(
+        url,
+        headers: _headers,
+        body: utf8.encode(json.encode(userDetails.toJson())),
+      );
+      if (response.statusCode == 200) {
+        final _responseBody = jsonDecode(response.body);
+        AuthService.instance.updateCurrentUser(UserDetails.fromJson(_responseBody));
+        return UserDetails.fromJson(_responseBody);
+      } else {
+        message = "Something went wrong on the backend.";
+      }
+    } on SocketException catch (e) {
+      message = e.message;
+    } catch (e) {
+      message = "Something went wrong!";
+    }
+  }
+
+  Future<String> refreshToken(String refreshToken) async {
+    var message;
+    String _refreshToken = AuthService.instance.refreshToken;
+    final url = Uri.parse("http://10.0.2.2:8000/api/auth/token/refresh/");
+    try {
+      final _headers = {HttpHeaders.contentTypeHeader: 'application/json'};
+      http.Response response = await client!.post(
+        url,
+        headers: _headers,
+        body: utf8.encode(json.encode({"refresh": _refreshToken})),
+      );
+      if (response.statusCode == 200) {
+        final _responseBody = jsonDecode(response.body);
+        // AuthService.instance.refreshToken = _responseBody['refresh'];
+        return _responseBody['access'];
+      } else {
+        message = "Something went wrong on the backend.";
+      }
+    } on SocketException catch (e) {
+      message = e.message;
+    } catch (e) {
+      message = "Something went wrong!";
+    }
+    return message;
   }
 }

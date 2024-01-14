@@ -6,6 +6,8 @@ class BasePath extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const basePage();
+    return Scaffold(
+      body: basePage(),
+    );
   }
 }
