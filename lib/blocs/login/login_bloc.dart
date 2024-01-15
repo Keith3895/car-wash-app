@@ -29,7 +29,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   Future login(LoginMethod loginMethod, Emitter<LoginState> emit,
       {InitiateEmailSignIn? event}) async {
     emit(loginMethod.loadingState);
-    final data;
+    final UserDetails? data;
     if (loginMethod == LoginMethod.email) {
       data =
           await authRepo.signInWithEmailAndPassword(email: event!.email, password: event.password);
@@ -49,9 +49,9 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   }
 
   Future addUserType(AddUserType event, Emitter<LoginState> emit) async {
-    UserDetails _userDetails = authService.currentUser!;
-    _userDetails.user_type = event.userType;
-    final data = await authRepo.updateUserDetails(_userDetails);
+    UserDetails userDetails = authService.currentUser!;
+    userDetails.user_type = event.userType;
+    final data = await authRepo.updateUserDetails(userDetails);
     if (data is UserDetails) {
       emit(const AddUserTypeSuccess(message: "User type Modified."));
       // await authService.updateCurrentUser(data.$1!);

@@ -1,9 +1,7 @@
 import 'package:car_wash/blocs/login/login_bloc.dart';
-import 'package:car_wash/repos/authRepo.dart';
 import 'package:car_wash/widgets/ElevatedButton.dart';
 import 'package:car_wash/widgets/inputLabel.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 VendorConfirmationModal(BuildContext context) {
@@ -13,7 +11,7 @@ VendorConfirmationModal(BuildContext context) {
       bool toggleState = true;
       return Container(
         height: 200,
-        color: Color(0xE7F8F8F8),
+        color: const Color(0xE7F8F8F8),
         child: const VendorConfirmation(),
       );
     },
@@ -21,7 +19,7 @@ VendorConfirmationModal(BuildContext context) {
 }
 
 class VendorConfirmation extends StatefulWidget {
-  const VendorConfirmation({Key? key}) : super(key: key);
+  const VendorConfirmation({super.key});
 
   @override
   _VendorConfirmationState createState() => _VendorConfirmationState();
@@ -45,7 +43,7 @@ class _VendorConfirmationState extends State<VendorConfirmation> {
                 // This bool value toggles the switch.
                 value: toggleState,
 
-                inactiveTrackColor: Color(0xFEE2CBFF),
+                inactiveTrackColor: const Color(0xFEE2CBFF),
                 activeColor: Colors.white,
                 activeTrackColor: Theme.of(context).colorScheme.secondary,
 

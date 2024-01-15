@@ -99,7 +99,7 @@ class _InputField extends State<InputField> {
           fillColor: Colors.transparent,
           filled: false,
           prefixIcon: _AddIcon(widget.ftIcon),
-          contentPadding: EdgeInsets.only(top: 0));
+          contentPadding: const EdgeInsets.only(top: 0));
     }
   }
 
@@ -108,7 +108,7 @@ class _InputField extends State<InputField> {
       return null;
     } else {
       return Container(
-        padding: EdgeInsets.only(left: 15, top: 13, bottom: 11),
+        padding: const EdgeInsets.only(left: 15, top: 13, bottom: 11),
         child: Text(ftIcon,
             style: TextStyle(
                 fontFamily: 'FontAwesome5ProRegular400',

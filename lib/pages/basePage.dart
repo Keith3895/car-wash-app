@@ -18,9 +18,9 @@ class basePageState extends State<basePage> {
   @override
   Widget build(BuildContext context) {
     if (AuthService.instance.currentUser?.user_type == null) {
-      context.read<LoginBloc>().emit(NoUserType(message: 'from base page'));
+      context.read<LoginBloc>().emit(const NoUserType(message: 'from base page'));
     } else if (AuthService.instance.currentUser?.user_type == 2) {
-      context.read<OnboardBloc>().add(getVendorDetails());
+      context.read<OnboardBloc>().add(const getVendorDetails());
     }
     return Scaffold(
         bottomNavigationBar: NavigationBar(

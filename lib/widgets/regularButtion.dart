@@ -39,7 +39,7 @@ class RegularButton extends StatelessWidget {
         style: buttonStyle,
         child: Text(
           text,
-          style: TextStyle(color: Color(0xE72D0C57), fontWeight: FontWeight.w700, fontSize: 15),
+          style: const TextStyle(color: Color(0xE72D0C57), fontWeight: FontWeight.w700, fontSize: 15),
         ),
         onPressed: () {
           onPressed();

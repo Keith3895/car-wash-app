@@ -5,7 +5,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
 class FilePickerWidget extends StatefulWidget {
-  FilePickerWidget({super.key, required this.onFilePicked, required this.filesList});
+  const FilePickerWidget({super.key, required this.onFilePicked, required this.filesList});
 
   final Function(List<PlatformFile>) onFilePicked;
   final List<PlatformFile> filesList;
@@ -15,8 +15,9 @@ class FilePickerWidget extends StatefulWidget {
 
 class _FilePickerWidget extends State<FilePickerWidget> {
   List<PlatformFile> _paths = [];
-  bool _multiPick = true;
+  final bool _multiPick = true;
 
+  @override
   void initState() {
     super.initState();
     _paths = widget.filesList;
@@ -38,18 +39,19 @@ class _FilePickerWidget extends State<FilePickerWidget> {
       return;
     }
     setState(() {});
-    widget.onFilePicked(_paths!);
+    widget.onFilePicked(_paths);
   }
 
+  @override
   Widget build(BuildContext context) {
     return Container(
-        margin: EdgeInsets.symmetric(horizontal: 10),
+        margin: const EdgeInsets.symmetric(horizontal: 10),
         child: Wrap(
           spacing: 22,
           runSpacing: 10,
           children: [
             // show images
-            if (_paths != null) ..._paths!.map((e) => cards(e.path)),
+            ..._paths.map((e) => cards(e.path)),
             cardButton(onPressed: () {
               _pickFiles();
             }),
@@ -58,7 +60,7 @@ class _FilePickerWidget extends State<FilePickerWidget> {
   }
 
   Widget cards(path) {
-    return Container(
+    return SizedBox(
       width: 156,
       height: 135,
       child: Card(
@@ -74,11 +76,11 @@ class _FilePickerWidget extends State<FilePickerWidget> {
                 ),
               ),
               child: IconButton(
-                icon: Icon(Icons.delete),
+                icon: const Icon(Icons.delete),
                 color: Colors.red,
                 onPressed: () {
                   setState(() {
-                    _paths!.removeWhere((element) => element.path == path);
+                    _paths.removeWhere((element) => element.path == path);
                   });
                   // Add your delete functionality here
                 },

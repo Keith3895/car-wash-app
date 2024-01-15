@@ -1,4 +1,3 @@
-import 'package:car_wash/widgets/filePicker.dart';
 import 'package:car_wash/widgets/inputField.dart';
 import 'package:car_wash/widgets/inputLabel.dart';
 import 'package:file_picker/file_picker.dart';
@@ -6,7 +5,7 @@ import 'package:flutter/material.dart';
 
 class PageTwo extends StatefulWidget {
   const PageTwo(
-      {Key? key,
+      {super.key,
       required this.formKey,
       required this.gstn,
       required this.PAN,
@@ -16,8 +15,7 @@ class PageTwo extends StatefulWidget {
       required this.UPID,
       required this.onFormSubmit,
       required this.gstCertificate,
-      required this.AdharNumber})
-      : super(key: key);
+      required this.AdharNumber});
 
   final Function onFormSubmit;
   final GlobalKey<FormState> formKey;

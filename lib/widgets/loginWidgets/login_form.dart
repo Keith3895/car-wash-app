@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class LoginFormSection extends StatefulWidget {
-  const LoginFormSection({Key? key}) : super(key: key);
+  const LoginFormSection({super.key});
 
   @override
   _LoginFormSectionState createState() => _LoginFormSectionState();
@@ -34,6 +34,7 @@ class _LoginFormSectionState extends State<LoginFormSection> {
     }
   }
 
+  @override
   Widget build(BuildContext context) {
     _loginBloc = context.read<LoginBloc>();
     return Form(

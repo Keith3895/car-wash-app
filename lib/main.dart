@@ -13,7 +13,6 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
@@ -73,10 +72,10 @@ class MyApp extends StatelessWidget {
   Connectivity connectivity;
   AppRouter appRouter;
   MyApp({
-    Key? key,
+    super.key,
     required this.connectivity,
     required this.appRouter,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -112,12 +111,12 @@ class MyApp extends StatelessWidget {
                 theme: ThemeData(
                     useMaterial3: true,
                     colorScheme: ColorScheme.fromSwatch().copyWith(
-                      primary: Color(0xE72D0C57),
-                      secondary: Color(0xE70BCE83),
-                      tertiary: Color(0xE79586A8),
+                      primary: const Color(0xE72D0C57),
+                      secondary: const Color(0xE70BCE83),
+                      tertiary: const Color(0xE79586A8),
                     ),
                     fontFamily: 'SFProText',
-                    scaffoldBackgroundColor: Color(0xE7F8F8F8)),
+                    scaffoldBackgroundColor: const Color(0xE7F8F8F8)),
                 onGenerateRoute: appRouter.onGenerateRoute,
                 // home: BlocListener<InternetCubit, InternetState>(
                 //   listener: (context, state) {

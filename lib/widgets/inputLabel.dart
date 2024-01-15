@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class InputLabels extends StatelessWidget {
   final String label;
-  const InputLabels({Key? key, required this.label}) : super(key: key);
+  const InputLabels({super.key, required this.label});
   @override
   Widget build(BuildContext context) {
     return Container(

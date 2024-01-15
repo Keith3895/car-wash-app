@@ -22,7 +22,7 @@ class AppRouter {
         );
       case '/onboarding':
         return MaterialPageRoute(
-          builder: (_) => AdminOnboarding(),
+          builder: (_) => const AdminOnboarding(),
         );
       default:
         return MaterialPageRoute(

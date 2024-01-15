@@ -15,7 +15,7 @@ class cardButton extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),
-        shadows: [
+        shadows: const [
           BoxShadow(
             color: Color(0x3F000000),
             blurRadius: 4,
@@ -40,7 +40,7 @@ class cardButton extends StatelessWidget {
                 height: 50,
                 padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
                 decoration: ShapeDecoration(
-                  color: Color(0xFF4CE5B1),
+                  color: const Color(0xFF4CE5B1),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(360),
                   ),
@@ -59,7 +59,7 @@ class cardButton extends StatelessWidget {
                           borderRadius: BorderRadius.circular(118),
                         ),
                       ),
-                      child: Column(
+                      child: const Column(
                         mainAxisSize: MainAxisSize.min,
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,

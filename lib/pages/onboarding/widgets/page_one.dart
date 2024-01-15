@@ -6,14 +6,13 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
 class PageOne extends StatefulWidget {
-  PageOne(
-      {Key? key,
+  const PageOne(
+      {super.key,
       required this.car_wash_name,
       required this.phone_number,
       required this.email,
       required this.filesList,
-      required this.onfilePicked})
-      : super(key: key);
+      required this.onfilePicked});
   final TextEditingController car_wash_name;
   final TextEditingController phone_number;
   final TextEditingController email;

@@ -28,9 +28,9 @@ class _PageThreeState extends State<PageThree> {
   void initState() {
     super.initState();
     _getCurrentLocation();
-    if (widget.address.text.isNotEmpty)
+    if (widget.address.text.isNotEmpty) {
       address = widget.address;
-    else {
+    } else {
       address.text = "Loading...";
     }
   }

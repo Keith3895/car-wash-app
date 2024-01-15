@@ -1,4 +1,3 @@
-import 'dart:math';
 
 import 'package:car_wash/models/car_wash.dart';
 import 'package:car_wash/repos/vendorRepo.dart';
@@ -11,18 +10,18 @@ class OnboardBloc extends Bloc<OnboardEvent, OnboardState> {
   final VendorRepo vendorRepo;
   OnboardBloc({required this.vendorRepo}) : super(OnboardInitial()) {
     on<AddCarWashDetails>((event, emit) async => addCarWash(emit, event: event));
-    on<getVendorDetails>((event, emit) async => emit(NoVendorDetails()));
+    on<getVendorDetails>((event, emit) async => emit(const NoVendorDetails()));
   }
 
   addCarWash(Emitter<OnboardState> emit, {AddCarWashDetails? event}) async {
     // emit OnboardLoading();
 
-    CarWash _carWash = event!.carWashDetails;
-    _carWash = await _ImageResolver(_carWash, emit);
+    CarWash carWash = event!.carWashDetails;
+    carWash = await _ImageResolver(carWash, emit);
     try {
-      final response = await vendorRepo.addCarWashDetails(carWashDetails: _carWash);
+      final response = await vendorRepo.addCarWashDetails(carWashDetails: carWash);
       if (response is CarWash) {
-        emit(OnboadSuccess(message: "Car Wash Added Successfully!"));
+        emit(const OnboadSuccess(message: "Car Wash Added Successfully!"));
       } else {
         emit(OnboardError(message: response));
       }
@@ -31,30 +30,30 @@ class OnboardBloc extends Bloc<OnboardEvent, OnboardState> {
     }
   }
 
-  Future<CarWash> _ImageResolver(CarWash _carWash, Emitter<OnboardState> emit) async {
-    if (_carWash.vendor_images_files != null) {
-      List<FileUploadResponse> _vendor_images = [];
-      for (var i = 0; i < _carWash.vendor_images_files!.length; i++) {
-        final _file = _carWash.vendor_images_files![i];
-        final _response = await vendorRepo.uploadFile(_file);
-        if (_response is FileUploadResponse) {
-          _vendor_images.add(_response);
+  Future<CarWash> _ImageResolver(CarWash carWash, Emitter<OnboardState> emit) async {
+    if (carWash.vendor_images_files != null) {
+      List<FileUploadResponse> vendorImages = [];
+      for (var i = 0; i < carWash.vendor_images_files!.length; i++) {
+        final file = carWash.vendor_images_files![i];
+        final response = await vendorRepo.uploadFile(file);
+        if (response is FileUploadResponse) {
+          vendorImages.add(response);
         } else {
-          emit(OnboardError(message: _response));
-          throw Exception(_response);
+          emit(OnboardError(message: response));
+          throw Exception(response);
         }
       }
-      _carWash.vendor_images = _vendor_images;
+      carWash.vendor_images = vendorImages;
     }
-    if (_carWash.kyc!.gst_certificate_file != null) {
-      final _response = await vendorRepo.uploadFile(_carWash.kyc!.gst_certificate_file!);
-      if (_response is FileUploadResponse) {
-        _carWash.kyc!.gst_certificate = _response.id;
+    if (carWash.kyc!.gst_certificate_file != null) {
+      final response = await vendorRepo.uploadFile(carWash.kyc!.gst_certificate_file!);
+      if (response is FileUploadResponse) {
+        carWash.kyc!.gst_certificate = response.id;
       } else {
-        emit(OnboardError(message: _response));
-        throw Exception(_response);
+        emit(OnboardError(message: response));
+        throw Exception(response);
       }
     }
-    return _carWash;
+    return carWash;
   }
 }

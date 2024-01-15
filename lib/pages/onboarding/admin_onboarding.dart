@@ -3,7 +3,6 @@ import 'package:car_wash/models/car_wash.dart';
 import 'package:car_wash/pages/onboarding/widgets/page_one.dart';
 import 'package:car_wash/pages/onboarding/widgets/page_three.dart';
 import 'package:car_wash/pages/onboarding/widgets/page_two.dart';
-import 'package:car_wash/repos/vendorRepo.dart';
 import 'package:car_wash/widgets/AppBar.dart';
 import 'package:car_wash/widgets/ElevatedButton.dart';
 import 'package:car_wash/widgets/cardButton.dart';
@@ -11,11 +10,12 @@ import 'package:car_wash/widgets/inputField.dart';
 import 'package:car_wash/widgets/inputLabel.dart';
 import 'package:car_wash/widgets/regularButtion.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AdminOnboarding extends StatefulWidget {
+  const AdminOnboarding({super.key});
+
   @override
   _AdminOnboardingState createState() => _AdminOnboardingState();
 }
@@ -57,7 +57,7 @@ class _AdminOnboardingState extends State<AdminOnboarding> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: CustomAppBar('Setup Profile'),
+        appBar: const CustomAppBar('Setup Profile'),
         body: SingleChildScrollView(
             child: BlocListener<OnboardBloc, OnboardState>(
           listener: (context, state) {

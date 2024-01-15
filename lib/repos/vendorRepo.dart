@@ -11,26 +11,24 @@ import 'package:http_parser/http_parser.dart';
 class VendorRepo {
   http.Client? client;
   VendorRepo({this.client}) {
-    if (this.client == null) {
-      this.client = http.Client();
-    }
+    client ??= http.Client();
   }
 
   // Add car wash Details
   Future<dynamic> addCarWashDetails({required CarWash carWashDetails}) async {
     var message = "";
-    String _accessToken = await AuthService.instance.getAccessToken();
+    String accessToken = await AuthService.instance.getAccessToken();
     final url = Uri.parse("http://10.0.2.2:8000/api/vendor/");
     try {
       http.Response response = await client!.post(url,
           headers: {
             HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.authorizationHeader: 'Bearer $_accessToken'
+            HttpHeaders.authorizationHeader: 'Bearer $accessToken'
           },
           body: utf8.encode(json.encode(carWashDetails.toJson())));
       if (response.statusCode == 201) {
-        final _responseBody = jsonDecode(response.body);
-        return CarWash.fromJson(_responseBody);
+        final responseBody = jsonDecode(response.body);
+        return CarWash.fromJson(responseBody);
       } else {
         message = "Something went wrong on the backend!";
       }
@@ -47,7 +45,7 @@ class VendorRepo {
     // call to upload file to server
     var message = "";
     final url = Uri.parse("http://10.0.2.2:8000/api/vendor/vendor-document/");
-    String _accessToken = await AuthService.instance.getAccessToken();
+    String accessToken = await AuthService.instance.getAccessToken();
     try {
       var mimeTypeData = lookupMimeType(file.name);
 
@@ -56,14 +54,14 @@ class VendorRepo {
           contentType: MediaType.parse(mimeTypeData ?? 'application/octet-stream')));
       request.headers.addAll({
         HttpHeaders.contentTypeHeader: 'multipart/form-data',
-        HttpHeaders.authorizationHeader: 'Bearer $_accessToken'
+        HttpHeaders.authorizationHeader: 'Bearer $accessToken'
       });
       var response = await request.send();
       if (response.statusCode == 201) {
         final respStr = await response.stream.bytesToString();
-        final _responseBody = jsonDecode(respStr);
+        final responseBody = jsonDecode(respStr);
 
-        return FileUploadResponse.fromJson(_responseBody);
+        return FileUploadResponse.fromJson(responseBody);
       } else {
         message = "Something went wrong on the backend!";
       }
