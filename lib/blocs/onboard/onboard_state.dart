@@ -33,3 +33,11 @@ class NoVendorDetails extends OnboardState {
   @override
   List<Object> get props => [];
 }
+
+class VendorDetailsSuccess extends OnboardState {
+  const VendorDetailsSuccess({required this.carWash});
+  final CarWash carWash;
+
+  @override
+  List<Object> get props => [carWash];
+}

@@ -17,11 +17,8 @@ CarWash _$CarWashFromJson(Map<String, dynamic> json) => CarWash(
           : Address.fromJson(json['address'] as Map<String, dynamic>),
       payment_information: json['payment_information'] == null
           ? null
-          : Account.fromJson(
-              json['payment_information'] as Map<String, dynamic>),
-      kyc: json['kyc'] == null
-          ? null
-          : KYC.fromJson(json['kyc'] as Map<String, dynamic>),
+          : Account.fromJson(json['payment_information'] as Map<String, dynamic>),
+      kyc: json['kyc'] == null ? null : KYC.fromJson(json['kyc'] as Map<String, dynamic>),
       vendor_images: (json['vendor_images'] as List<dynamic>?)
           ?.map((e) => FileUploadResponse.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -74,6 +71,9 @@ Address _$AddressFromJson(Map<String, dynamic> json) => Address(
       zip_code: json['zip_code'] as String?,
       country: json['country'] as String?,
       address: json['address'] as String?,
+      location: json['location'] == null
+          ? null
+          : LocationGIS.fromJson(json['location'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$AddressToJson(Address instance) => <String, dynamic>{
@@ -83,10 +83,10 @@ Map<String, dynamic> _$AddressToJson(Address instance) => <String, dynamic>{
       'zip_code': instance.zip_code,
       'country': instance.country,
       'address': instance.address,
+      'location': instance.location,
     };
 
-FileUploadResponse _$FileUploadResponseFromJson(Map<String, dynamic> json) =>
-    FileUploadResponse(
+FileUploadResponse _$FileUploadResponseFromJson(Map<String, dynamic> json) => FileUploadResponse(
       id: json['id'] as String?,
       created_at: json['created_at'] as String?,
       updated_at: json['updated_at'] as String?,
@@ -95,12 +95,22 @@ FileUploadResponse _$FileUploadResponseFromJson(Map<String, dynamic> json) =>
       document_name: json['document_name'] as String?,
     );
 
-Map<String, dynamic> _$FileUploadResponseToJson(FileUploadResponse instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$FileUploadResponseToJson(FileUploadResponse instance) => <String, dynamic>{
       'id': instance.id,
       'created_at': instance.created_at,
       'updated_at': instance.updated_at,
       'document_url': instance.document_url,
       'document_type': instance.document_type,
       'document_name': instance.document_name,
+    };
+
+LocationGIS _$LocationFromJson(Map<String, dynamic> json) => LocationGIS(
+      type: json['type'] as String,
+      coordinates:
+          (json['coordinates'] as List<dynamic>).map((e) => (e as num).toDouble()).toList(),
+    );
+
+Map<String, dynamic> _$LocationToJson(LocationGIS instance) => <String, dynamic>{
+      'type': instance.type,
+      'coordinates': instance.coordinates,
     };

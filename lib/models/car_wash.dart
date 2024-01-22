@@ -157,8 +157,17 @@ class Address {
   final String? country;
   @JsonKey(name: 'address')
   final String? address;
+  @JsonKey(name: 'location')
+  final LocationGIS? location;
 
-  Address({this.street, this.city, this.state, this.zip_code, this.country, this.address});
+  Address(
+      {this.street,
+      this.city,
+      this.state,
+      this.zip_code,
+      this.country,
+      this.address,
+      this.location});
 
   factory Address.fromJson(Map<String, dynamic> json) {
     return _$AddressFromJson(json);
@@ -167,7 +176,7 @@ class Address {
   Map<String, dynamic> toJson() => _$AddressToJson(this);
 
   @override
-  List get props => [street, city, state, zip_code, country, address];
+  List get props => [street, city, state, zip_code, country, address, location];
 }
 
 @JsonSerializable()
@@ -195,4 +204,18 @@ class FileUploadResponse {
 
   @override
   List get props => [id, created_at, updated_at, document_url, document_type, document_name];
+}
+
+@JsonSerializable()
+class LocationGIS {
+  String type;
+  List<double> coordinates;
+
+  LocationGIS({
+    required this.type,
+    required this.coordinates,
+  });
+
+  factory LocationGIS.fromJson(Map<String, dynamic> json) => _$LocationFromJson(json);
+  Map<String, dynamic> toJson() => _$LocationToJson(this);
 }

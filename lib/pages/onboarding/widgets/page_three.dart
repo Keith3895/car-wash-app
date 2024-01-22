@@ -142,6 +142,10 @@ class _PageThreeState extends State<PageThree> {
                 state: placemarks.first.administrativeArea.toString(),
                 country: placemarks.first.country.toString(),
                 zip_code: placemarks.first.postalCode.toString(),
+                location: LocationGIS(coordinates: [
+                  cameraPosition!.target.longitude,
+                  cameraPosition!.target.latitude
+                ], type: 'Point'),
                 address: address.text);
             widget.onAddressSet(addressObj);
           });

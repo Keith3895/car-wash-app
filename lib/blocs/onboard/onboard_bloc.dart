@@ -1,4 +1,3 @@
-
 import 'package:car_wash/models/car_wash.dart';
 import 'package:car_wash/repos/vendorRepo.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -56,4 +55,15 @@ class OnboardBloc extends Bloc<OnboardEvent, OnboardState> {
     }
     return carWash;
   }
+
+  // getVendor(Emitter<OnboardState> emit) async {
+  //   final response = await vendorRepo.getVendorDetails();
+  //   if (response is CarWash) {
+  //     return emit(VendorDetailsSuccess(carWash: response));
+  //   } else {
+  //     emit(OnboardError(message: response));
+  //     emit(const NoVendorDetails());
+  //     throw Exception(response);
+  //   }
+  // }
 }
